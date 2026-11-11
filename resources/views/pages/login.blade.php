@@ -93,6 +93,8 @@
                     body: data
                 });
 
+                console.log("Response data: ", response);
+
                 if (response.token) {
                     Roaster.saveToken(response.token);
                 }

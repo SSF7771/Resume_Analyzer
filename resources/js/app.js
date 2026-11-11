@@ -610,7 +610,7 @@ async function initDiffPanel() {
         box.innerHTML =
             '<div class="h-[300px] animate-pulse bg-[var(--surface-2)] rounded-2xl"></div>';
         try {
-            var d = await Roaster.api(
+            var d = await api(
                 "/resumes/" +
                     encodeURIComponent(id) +
                     "/diff?from=" +
