@@ -244,7 +244,7 @@ async function ensureAuth() {
         hydrateUser(u);
         return u;
     } catch (e) {
-        clearToken();
+        window.Roaster.clearToken();
         location.href = "/login";
         return null;
     }
@@ -351,10 +351,10 @@ function initShell() {
     $$('[data-action="logout"]').forEach(function (b) {
         b.onclick = async function () {
             try {
-                if (token()) await api("/logout", { method: "POST" });
+                if (window.Roaster.token()) await api("/logout", { method: "POST" });
             } catch (e) {}
 
-            clearToken();
+            window.Roaster.clearToken();
             location.href = "/login";
         };
     });
@@ -704,7 +704,7 @@ async function authPage(type) {
             if (!d.token) 
                 throw new Error((d && d.message) || "No authentication token was returned by the server.");
 
-            saveToken(d.token);
+            window.Roaster.saveToken(d.token);
             location.href = "/dashboard";
         } catch (ex) {
             console.error("Auth error details:", ex);
