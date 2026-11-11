@@ -11,7 +11,7 @@
 
   <script>
     window.ROASTER = {
-      apiBase: "{{ env('API_BASE_URL') }}",
+      apiBase: "{{ rtrim(config('app.url'), '/') . '/api' }}",
       tokenKey: 'auth_token'
     };
   </script>
