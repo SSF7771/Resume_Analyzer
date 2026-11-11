@@ -12,7 +12,7 @@
 
   <script>
     window.Roaster = Object.assign(window.Roaster || {}, {
-      apiBase: '',
+      apiBase: '/api',
       tokenKey: 'auth_token'
     });
   </script>
