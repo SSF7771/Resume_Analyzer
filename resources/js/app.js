@@ -682,11 +682,26 @@ async function authPage(type) {
         err.classList.add("hidden");
         try {
             var d = await api("/" + type, { method: "POST", body: data });
+            console.log("Submitting to API path:", "/" + type, data);
+            var d = await api("/" + type, { method: "POST", body: data });
+            console.log("Response from api():", d);
+
+            if (!d || typeof d !== "object") 
+                throw new Error("Server returned an invalid response (expected JSON, got: " + typeof d + ")");
+
+            if (!d.token) 
+                throw new Error((d && d.message) || "No authentication token was returned by the server.");
+
             saveToken(d.token);
             location.href = "/dashboard";
         } catch (ex) {
-            err.textContent = ex.message;
-            err.classList.remove("hidden");
+            console.error("Auth error details:", ex);
+            if (err) {
+                err.textContent = ex.message || "Failed to authenticate.";
+                err.classList.remove("hidden");
+            } else {
+                alert(ex.message || "Failed to authenticate.");
+            }
         } finally {
             btn.disabled = false;
         }
