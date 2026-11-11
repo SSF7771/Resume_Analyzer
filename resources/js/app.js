@@ -204,7 +204,6 @@ async function api(path, options) {
         method: options.method || "GET",
         headers: headers,
         body: body,
-        redirect: "manual"
     });
 
     var data = null,
@@ -224,6 +223,9 @@ async function api(path, options) {
     }
 
     if (!res.ok) {
+        console.error("API Error Status:", res.status); // <--- DEBUG 2: See HTTP Status
+        console.error("API Error Response Body:", data);
+
         var msg =
             (data && data.message) ||
             (data && data.errors
