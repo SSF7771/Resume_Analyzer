@@ -7,7 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Roaster')</title>
   <!-- Tailwindcss + Public css file -->
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -30,8 +30,6 @@
   <script>
     lucide.createIcons();
   </script>
-  
-  <script src="{{ asset('js/app.js') }}"></script>
 
   @stack('scripts')
 </body>
