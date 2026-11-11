@@ -10,7 +10,7 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <script>
-    window.ROASTER = {
+    window.Roaster = {
       apiBase: "{{ rtrim(config('app.url'), '/') . '/api' }}",
       tokenKey: 'auth_token'
     };
