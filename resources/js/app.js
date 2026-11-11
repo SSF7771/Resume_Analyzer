@@ -181,7 +181,7 @@ async function api(path, options) {
     var headers = new Headers(options.headers || {});
     headers.set("Accept", "application/json");
 
-    var t = window.Roaster?.token ? window.Roaster.token() : null;
+    var t = Roaster?.token ? Roaster.token() : null;
     if (t) headers.set("Authorization", "Bearer " + t);
 
     var body = options.body;
@@ -284,7 +284,7 @@ function initTheme() {
         if (b.getAttribute("data-current-icon") !== iconName) {
             b.innerHTML = Roaster.icon(iconName, "w-4 h-4");
             b.setAttribute("data-current-icon", iconName);
-            drawIcons();
+            Roaster.drawIcons();
         }
     }
 
