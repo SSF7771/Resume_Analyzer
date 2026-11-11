@@ -702,9 +702,7 @@ async function authPage(type) {
     if (!form) return;
     form.onsubmit = async function (e) {
         e.preventDefault();
-        var formData = new FormData(form);
-        formData.delete('_token');
-        var data = Object.fromEntries(formData.entries());
+        var data = Object.fromEntries(new FormData(form).entries());
         var btn = $("#" + type + "-submit"),
             err = $("#" + type + "-error");
         btn.disabled = true;
