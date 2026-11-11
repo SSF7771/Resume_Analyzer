@@ -88,14 +88,21 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await Roaster.api("/login", {
+                console.log("Submitting to API:", "/" + type, data);
+                var d = await Roaster.api("/" + type, {
                     method: "POST",
                     body: data
                 });
 
-                if (response.token) {
-                    Roaster.saveToken(response.token);
-                }
+                console.log("Response from api():", d);
+
+                if (!d || typeof d !== "object")
+                    throw new Error("Server returned an invalid response (expected JSON, got: " + typeof d + ")");
+
+                if (!d.token)
+                    throw new Error((d && d.message) || "No authentication token was returned by the server.");
+
+                Roaster.saveToken(d.token);
 
                 // Success redirect
                 window.location.href = '/dashboard';
@@ -107,7 +114,7 @@
                 errorDiv.classList.remove('hidden');
 
                 // Re-initialize icons because we injected a loader/arrow icon
-                if (window.Roaster && Roaster.drawIcons) 
+                if (window.Roaster && Roaster.drawIcons)
                     Roaster.drawIcons();
             }
         });
