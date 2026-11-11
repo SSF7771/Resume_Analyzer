@@ -7,6 +7,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Sanctum\Sanctum;
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // FOR VERCEL -> allowing https
+        if (config('app.env') === 'production')
+            URL::forceScheme('https');
+        
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         
         // Auth Limiter: 30 attempts per 15 minutes per IP
@@ -42,6 +47,8 @@ class AppServiceProvider extends ServiceProvider
                 $request->user()?->id ?: $request->ip()
             );
         });
+
+
 
         // config(['gemini.api_key' => env('GEMINI_API_KEY')]);
     }
