@@ -11,7 +11,7 @@
 
   <script>
     window.ROASTER = {
-      apiBase: "{{ env('API_BASE_URL') }}",
+      apiBase: "{{ env('API_BASE_URL', 'https://resume-analyzer-teal-seven.vercel.app/api') }}",
       tokenKey: 'auth_token'
     };
   </script>
