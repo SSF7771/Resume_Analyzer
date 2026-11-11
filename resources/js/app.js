@@ -1,7 +1,7 @@
 // Configuration
 const existingConfig = window.Roaster || {};
-const apiBase = "/api";
-const tokenKey = "auth_token";
+const apiBase = existingConfig.apiBase || "/api";
+const tokenKey = existingConfig.tokenKey || "auth_token";
 
 // Merge all methods into window.Roaster instead of overwriting it
 window.Roaster = Object.assign(window.Roaster || {}, {
@@ -712,7 +712,7 @@ async function authPage(type) {
 
         try {
             console.log("Submitting to API:", "/" + type, data);
-            var d = await api("/" + type, { 
+            var d = await Roaster.api("/" + type, { 
                 method: "POST", 
                 body: data 
             });
@@ -784,7 +784,7 @@ async function main() {
         return;
     }
     if (page === "login" || page === "register") {
-        await authPage(page);
+        // await authPage(page);
         Roaster.drawIcons();
         return;
     }
