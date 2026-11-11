@@ -1,5 +1,5 @@
 // Configuration
-const cfg = window.ROASTER || { apiBase: "/api", tokenKey: "auth_token" };
+const cfg = window.Roaster || { apiBase: "/api", tokenKey: "auth_token" };
 
 window.Roaster = {
     // Utilities
@@ -167,7 +167,7 @@ async function api(path, options) {
     var headers = new Headers(options.headers || {});
     headers.set("Accept", "application/json");
 
-    var t = token();
+    var t = window.Roaster.token();
     if (t) headers.set("Authorization", "Bearer " + t);
 
     var body = options.body;
@@ -177,7 +177,7 @@ async function api(path, options) {
     }
 
     // Determine Base URL safely from window.ROASTER or fallback to "/api"
-    var base = (window.ROASTER?.apiBase || (typeof cfg !== "undefined" && cfg.apiBase) || "/api").replace(/\/+$/, "");
+    var base = (window.Roaster?.apiBase || (typeof cfg !== "undefined" && cfg.apiBase) || "/api").replace(/\/+$/, "");
 
     // If path is already a full URL (http/https), don't prepend base
     var url = /^https?:\/\//i.test(path)
@@ -234,7 +234,7 @@ function hydrateUser(u) {
         $("#topbar-first-name").textContent = name.split(" ")[0] || "there";
 }
 async function ensureAuth() {
-    if (!token()) {
+    if (!window.Roaster.token()) {
         location.href = "/login";
         return null;
     }
