@@ -1,7 +1,7 @@
 // Configuration
 const existingConfig = window.Roaster || {};
-const apiBase = existingConfig.apiBase || "/api";
-const tokenKey = existingConfig.tokenKey || "auth_token";
+const apiBase = "/api";
+const tokenKey = "auth_token";
 
 // Merge all methods into window.Roaster instead of overwriting it
 window.Roaster = Object.assign(window.Roaster || {}, {
