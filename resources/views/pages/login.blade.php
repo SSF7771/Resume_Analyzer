@@ -68,3 +68,48 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('login-submit');
+            const errorDiv = document.getElementById('login-error');
+
+            submitBtn.disabled = true;
+            // Save original HTML content (so we can restore it if it fails)
+            const originalContent = submitBtn.textContent;
+            submitBtn.textContent = 'Signing in...';
+
+            errorDiv.classList.add('hidden');
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await Roaster.api("/login", {
+                    method: "POST",
+                    body: data
+                });
+
+                if (response.token) {
+                    Roaster.saveToken(response.token);
+                }
+
+                // Success redirect
+                window.location.href = '/dashboard';
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent; // Restores "Sign in ->"
+
+                errorDiv.innerText = err.message || "Invalid credentials";
+                errorDiv.classList.remove('hidden');
+
+                // Re-initialize icons because we injected a loader/arrow icon
+                if (window.Roaster && Roaster.drawIcons) 
+                    Roaster.drawIcons();
+            }
+        });
+    </script>
+@endpush

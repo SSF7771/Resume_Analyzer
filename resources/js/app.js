@@ -148,6 +148,8 @@ window.Roaster = Object.assign(window.Roaster || {}, {
         const base = (this.apiBase || "/api").replace(/\/+$/, "");
         const url = path.startsWith("http") ? path : `${base}${path.startsWith("/") ? path : "/" + path}`;
 
+        console.log("URL being used: ", url);
+
         const res = await fetch(url, {
             method: options.method || "GET",
             headers,
@@ -710,7 +712,7 @@ async function authPage(type) {
 
         try {
             console.log("Submitting to API:", "/" + type, data);
-            var d = await Roaster.api("/" + type, { 
+            var d = await api("/" + type, { 
                 method: "POST", 
                 body: data 
             });
