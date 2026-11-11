@@ -176,7 +176,14 @@ async function api(path, options) {
         body = JSON.stringify(body);
     }
 
-    var url = (cfg.apiBase || "/api").replace(/\/$/, "") + path;
+    // Determine Base URL safely from window.ROASTER or fallback to "/api"
+    var base = (window.ROASTER?.apiBase || (typeof cfg !== "undefined" && cfg.apiBase) || "/api").replace(/\/+$/, "");
+
+    // If path is already a full URL (http/https), don't prepend base
+    var url = /^https?:\/\//i.test(path)
+        ? path
+        : base + (path.startsWith("/") ? path : "/" + path);
+
     var res = await fetch(url, {
         method: options.method || "GET",
         headers: headers,
@@ -682,20 +689,10 @@ async function authPage(type) {
         err.classList.add("hidden");
 
         try {
-            // Use the apiBase defined in window.ROASTER or prepend /api
-            var baseUrl = window.ROASTER?.apiBase || "/api";
-            var url = baseUrl.replace(/\/+$/, '') + "/" + type;
-
-            console.log("Submitting to API path:", url, data);
-
-            // Send Accept & Content-Type headers, and stringify data
-            var d = await api(url, { 
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
+            console.log("Submitting to API:", "/" + type, data);
+            var d = await api("/" + type, { 
+                method: "POST", 
+                body: data 
             });
 
             console.log("Response from api():", d);
