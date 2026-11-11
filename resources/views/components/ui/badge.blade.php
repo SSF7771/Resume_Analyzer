@@ -1,0 +1,3 @@
+@props(['tone'=>'neutral'])
+@php($toneClass=['neutral'=>'bg-[var(--secondary)] text-[var(--muted-foreground)] border border-[var(--border)]','accent'=>'bg-[var(--secondary)] text-[var(--primary)]','success'=>'bg-[var(--secondary)] text-[var(--primary)]','warning'=>'bg-[#FBF1E2] text-[var(--primary)]','danger'=>'bg-destructive/10 text-[var(--destructive)]','ink'=>'bg-[var(--foreground)] text-[var(--background)]'][$tone] ?? 'bg-[var(--secondary)] text-[var(--muted-foreground)]'])
+<span {{ $attributes->merge(['class'=>'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium tracking-tight tabular '.$toneClass]) }}>{{ $slot }}</span>

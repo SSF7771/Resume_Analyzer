@@ -1,0 +1,2 @@
+@props(['type'=>'text'])
+<input type="{{ $type }}" {{ $attributes->merge(['class'=>'h-10 w-full rounded-full border border-[var(--border)] bg-[var(--card)] px-4 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none transition-colors focus:border-[var(--primary)]/50 focus:ring-2 focus:ring-[var(--primary)]/15 disabled:opacity-50']) }}>

@@ -1,0 +1,2 @@
+@props(['dot'=>false])
+<button {{ $attributes->merge(['class'=>'relative inline-flex items-center justify-center h-11 w-11 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] shadow-card transition-all hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/30']) }}>{{ $slot }}@if($dot)<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[var(--destructive)] ring-2 ring-[var(--card)]"></span>@endif</button>
