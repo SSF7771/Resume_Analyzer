@@ -6,12 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Roaster')</title>
+
+  <!-- @vite(['../public/css/app.css']) -->
+
   <!-- Tailwindcss + Public css file -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <script>
     window.Roaster = Object.assign(window.Roaster || {}, {
-      apiBase: '/api',
+      apiBase: '',
       tokenKey: 'auth_token'
     });
   </script>
