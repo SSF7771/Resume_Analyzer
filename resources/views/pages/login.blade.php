@@ -112,6 +112,8 @@
                         body: data,
                     });
 
+                    console.log(response);
+
                     // Safely store token if returned (using optional chaining)
                     if (response?.token) 
                         Roaster.saveToken(response.token);
