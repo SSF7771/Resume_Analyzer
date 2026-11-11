@@ -10,6 +10,14 @@
   },
   "routes": [
     {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
+    },
+    {
       "src": "/build/(.*)",
       "dest": "/build/$1"
     },
