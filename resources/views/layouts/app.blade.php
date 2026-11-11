@@ -9,18 +9,9 @@
   <!-- Tailwindcss + Public css file -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-  @php
-    $appUrl = config('app.url');
-    // Ensure scheme exists if VERCEL_URL was used
-    if ($appUrl && !str_starts_with($appUrl, 'http://') && !str_starts_with($appUrl, 'https://'))
-      $appUrl = 'https://' . $appUrl;
-    
-    $apiBase = rtrim($appUrl, '/') . '/api';
-  @endphp
-
   <script>
     window.Roaster = Object.assign(window.Roaster || {}, {
-      apiBase: "{{ $apiBase }}",
+      apiBase: '/api',
       tokenKey: 'auth_token'
     });
   </script>
