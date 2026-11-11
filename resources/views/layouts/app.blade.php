@@ -8,6 +8,14 @@
   <title>@yield('title', 'Roaster')</title>
   <!-- Tailwindcss + Public css file -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+  <script>
+    window.ROASTER = {
+      apiBase: "{{ env('API_BASE_URL') }}",
+      tokenKey: 'auth_token'
+    };
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
