@@ -680,10 +680,24 @@ async function authPage(type) {
             err = $("#" + type + "-error");
         btn.disabled = true;
         err.classList.add("hidden");
+
         try {
-            var d = await api("/" + type, { method: "POST", body: data });
-            console.log("Submitting to API path:", "/" + type, data);
-            var d = await api("/" + type, { method: "POST", body: data });
+            // 1. Use the apiBase defined in window.ROASTER or prepend /api
+            var baseUrl = window.ROASTER?.apiBase || "/api";
+            var url = baseUrl.replace(/\/+$/, '') + "/" + type;
+
+            console.log("Submitting to API path:", url, data);
+
+            // 2. Send Accept & Content-Type headers, and stringify data
+            var d = await api(url, { 
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
             console.log("Response from api():", d);
 
             if (!d || typeof d !== "object") 
@@ -707,6 +721,7 @@ async function authPage(type) {
         }
     };
 }
+
 function landing() {
     var c = $("#landing-preview-chart");
     if (c && window.Chart)
