@@ -88,7 +88,7 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await Roaster.api("/login", {
+                const response = await api("/login", {
                     method: "POST",
                     body: data
                 });
