@@ -122,7 +122,7 @@ window.Roaster = Object.assign(window.Roaster || {}, {
             '</div><button class="text-[var(--ink-muted)] text-lg leading-none">×</button>';
 
         root.appendChild(el);
-        this.drawIcons();
+        this.Roaster.drawIcons();
 
         var close = function () {
             el.remove();
@@ -437,7 +437,7 @@ function initCommandPalette() {
                 )
                 .join("");
 
-            drawIcons();
+            Roaster.drawIcons();
         } catch (e) {
             console.error("Search failed", e);
         }
@@ -500,7 +500,7 @@ async function initDiffPanel() {
             "Need two versions to compare",
             "Apply rewrites or upload a new version to see diffs here.",
         );
-        drawIcons();
+        Roaster.drawIcons();
         return;
     }
     var mode = "words",
@@ -565,7 +565,7 @@ async function initDiffPanel() {
                     .join("") +
                 '</select><button id="full-diff-compare" type="button" class="h-8 px-3 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">Compare</button></div><div id="full-diff-result" class="mt-5"></div>',
         );
-        drawIcons();
+        Roaster.drawIcons();
         $Roaster.$("[data-full-diff-mode]").forEach(function (b) {
             b.onclick = function () {
                 mode = b.dataset.fullDiffMode;
@@ -684,13 +684,13 @@ async function initDiffPanel() {
                     })
                     .join("") +
                 "</div></div>";
-            drawIcons();
+            Roaster.drawIcons();
         } catch (e) {
             box.innerHTML =
                 '<div class="text-xs text-[var(--danger)] bg-[#F8E3E0] rounded-xl px-3 py-2">' +
                 Roaster.esc(e.message) +
                 "</div>";
-            drawIcons();
+            Roaster.drawIcons();
         }
     }
     shell();
@@ -774,7 +774,7 @@ function landing() {
 }
 
 async function main() {
-    drawIcons();
+    Roaster.drawIcons();
     initTheme();
     var page = document.body.dataset.page;
     if (page === "landing") {
@@ -783,7 +783,7 @@ async function main() {
     }
     if (page === "login" || page === "register") {
         await authPage(page);
-        drawIcons();
+        Roaster.drawIcons();
         return;
     }
     var u = await ensureAuth();
@@ -794,7 +794,7 @@ async function main() {
 
     initShell();
 
-    drawIcons();
+    Roaster.drawIcons();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
