@@ -96,7 +96,7 @@ window.Roaster = Object.assign(window.Roaster || {}, {
     },
 
     toast: function (title, description, variant) {
-        var root = this.$("#toast-root");
+        var root = this.Roaster.$("#toast-root");
         if (!root) return;
 
         var err = variant === "error";
@@ -244,26 +244,26 @@ async function api(path, options) {
 function hydrateUser(u) {
     if (!u) return;
     var name = u.name || "Account";
-    if ($("#sidebar-avatar"))
-        $("#sidebar-avatar").textContent = (name[0] || "R").toUpperCase();
-    if ($("#sidebar-name")) $("#sidebar-name").textContent = name;
-    if ($("#sidebar-email")) $("#sidebar-email").textContent = u.email || "";
-    if ($("#topbar-first-name"))
-        $("#topbar-first-name").textContent = name.split(" ")[0] || "there";
+    if (Roaster.$("#sidebar-avatar"))
+        Roaster.$("#sidebar-avatar").textContent = (name[0] || "R").toUpperCase();
+    if (Roaster.$("#sidebar-name")) Roaster.$("#sidebar-name").textContent = name;
+    if (Roaster.$("#sidebar-email")) Roaster.$("#sidebar-email").textContent = u.email || "";
+    if (Roaster.$("#topbar-first-name"))
+        Roaster.$("#topbar-first-name").textContent = name.split(" ")[0] || "there";
 }
 
 async function ensureAuth() {
-    if (!window.Roaster.token()) {
+    if (!Roaster.token()) {
         location.href = "/login";
         return null;
     }
     try {
-        var d = await api("/me");
+        var d = await Roaster.api("/me");
         var u = d.user || d;
         hydrateUser(u);
         return u;
     } catch (e) {
-        window.Roaster.clearToken();
+        Roaster.clearToken();
         location.href = "/login";
         return null;
     }
@@ -273,7 +273,7 @@ function initTheme() {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     function updateToggleButton(theme) {
-        var b = $("#theme-toggle");
+        var b = Roaster.$("#theme-toggle");
         if (!b) return;
 
         // If theme is dark, show 'sun' (meaning click to go light).
@@ -282,7 +282,7 @@ function initTheme() {
         
         // Only update if it's different to prevent unnecessary DOM flashing
         if (b.getAttribute("data-current-icon") !== iconName) {
-            b.innerHTML = icon(iconName, "w-4 h-4");
+            b.innerHTML = Roaster.icon(iconName, "w-4 h-4");
             b.setAttribute("data-current-icon", iconName);
             drawIcons();
         }
@@ -316,7 +316,7 @@ function initTheme() {
     applyTheme(initialTheme);
 
     // Handle button click toggle
-    var b = $("#theme-toggle");
+    var b = Roaster.$("#theme-toggle");
     if (b) {
         b.onclick = function () {
             // Check the DOM class directly to see what the active theme is right now
@@ -354,7 +354,7 @@ function initShell() {
     initCommandPalette();
 
     var path = location.pathname;
-    $$("[data-nav]").forEach(function (a) {
+    $Roaster.$("[data-nav]").forEach(function (a) {
         var target = a.getAttribute("data-nav");
         var row = a.querySelector(".nav-row");
         if (!row) return;
@@ -367,29 +367,29 @@ function initShell() {
             );
         }
     });
-    $$('[data-action="logout"]').forEach(function (b) {
+    $Roaster.$('[data-action="logout"]').forEach(function (b) {
         b.onclick = async function () {
             try {
-                if (window.Roaster.token()) await api("/logout", { method: "POST" });
+                if (Roaster.token()) await Roaster.api("/logout", { method: "POST" });
             } catch (e) {}
 
-            window.Roaster.clearToken();
+            Roaster.clearToken();
             location.href = "/login";
         };
     });
     var open = function () {
-        $("#command-palette") &&
-            $("#command-palette").classList.remove("hidden");
+        Roaster.$("#command-palette") &&
+            Roaster.$("#command-palette").classList.remove("hidden");
     };
     var close = function () {
-        $("#command-palette") && $("#command-palette").classList.add("hidden");
+        Roaster.$("#command-palette") && Roaster.$("#command-palette").classList.add("hidden");
     };
-    $("#open-search") && $("#open-search").addEventListener("click", open);
-    $("#mobile-search") && $("#mobile-search").addEventListener("click", open);
+    Roaster.$("#open-search") && Roaster.$("#open-search").addEventListener("click", open);
+    Roaster.$("#mobile-search") && Roaster.$("#mobile-search").addEventListener("click", open);
     document.addEventListener("keydown", function (e) {
         if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "f") {
             e.preventDefault();
-            var p = $("#command-palette");
+            var p = Roaster.$("#command-palette");
             if (p) p.classList.toggle("hidden");
         }
         if (e.key === "Escape") close();
@@ -398,8 +398,8 @@ function initShell() {
 
 // Search bar
 function initCommandPalette() {
-    const input = $("#palette-input");
-    const results = $("#palette-results");
+    const input = Roaster.$("#palette-input");
+    const results = Roaster.$("#palette-results");
 
     if (!input) return;
 
@@ -413,7 +413,7 @@ function initCommandPalette() {
 
         try {
             // Search via your API
-            const data = await api("/search?q=" + encodeURIComponent(query));
+            const data = await Roaster.api("/search?q=" + encodeURIComponent(query));
 
             if (!data.length) {
                 results.innerHTML =
@@ -427,10 +427,10 @@ function initCommandPalette() {
                     (r) => `
                 <a href="/resumes/${r.id}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[var(--surface-2)] transition-colors">
                     <div class="h-8 w-8 rounded-lg bg-[var(--accent-soft)] flex items-center justify-center">
-                        ${icon("file-text", "w-4 h-4")}
+                        ${Roaster.icon("file-text", "w-4 h-4")}
                     </div>
                     <div>
-                        <div class="text-sm font-medium">${esc(r.title)}</div>
+                        <div class="text-sm font-medium">${Roaster.esc(r.title)}</div>
                     </div>
                 </a>
             `,
@@ -445,7 +445,7 @@ function initCommandPalette() {
 }
 
 function initChart(scoreData) {
-    const ctx = $("#dashboard-score-chart");
+    const ctx = Roaster.$("#dashboard-score-chart");
     if (!ctx || !window.Chart) return;
 
     new Chart(ctx, {
@@ -490,12 +490,12 @@ function getPageId() {
 
 // Helper function for initialization of Version Differencial panel -> resume-detail page
 async function initDiffPanel() {
-    var root = $("#full-diff-panel");
+    var root = Roaster.$("#full-diff-panel");
     if (!root) return;
     var id = getPageId();
     var versions = window.__resumeVersions || [];
     if (versions.length < 2) {
-        root.innerHTML = empty(
+        root.innerHTML = Roaster.empty(
             "git-compare",
             "Need two versions to compare",
             "Apply rewrites or upload a new version to see diffs here.",
@@ -507,7 +507,7 @@ async function initDiffPanel() {
         fromId = versions[versions.length - 2].id,
         toId = versions[versions.length - 1].id;
     function shell() {
-        root.innerHTML = card(
+        root.innerHTML = Roaster.card(
             '<div class="flex items-start justify-between gap-4 flex-wrap"><div><div class="font-display text-base font-semibold">Version Diff</div><div class="text-sm text-[var(--ink-muted)] mt-1">Compare what changed between any two versions</div></div><div class="inline-flex items-center gap-1 bg-[var(--surface-2)] border border-[var(--border)] p-1 rounded-full">' +
                 ["words", "lines"]
                     .map(function (m) {
@@ -530,7 +530,7 @@ async function initDiffPanel() {
                     .map(function (v) {
                         return (
                             '<option value="' +
-                            esc(v.id) +
+                            Roaster.esc(v.id) +
                             '" ' +
                             (String(v.id) === String(fromId)
                                 ? "selected"
@@ -538,19 +538,19 @@ async function initDiffPanel() {
                             " " +
                             (String(v.id) === String(toId) ? "disabled" : "") +
                             ">" +
-                            esc(v.label || "Version") +
+                            Roaster.esc(v.label || "Version") +
                             "</option>"
                         );
                     })
                     .join("") +
                 '</select><div class="h-8 w-8 rounded-full flex items-center justify-center text-white shadow-card" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">' +
-                icon("arrow-right", "w-4 h-4") +
+                Roaster.icon("arrow-right", "w-4 h-4") +
                 '</div><span class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">To</span><select id="full-diff-to" class="h-8 px-3 rounded-full border border-[var(--border)] bg-[var(--surface)] text-xs">' +
                 versions
                     .map(function (v) {
                         return (
                             '<option value="' +
-                            esc(v.id) +
+                            Roaster.esc(v.id) +
                             '" ' +
                             (String(v.id) === String(toId) ? "selected" : "") +
                             " " +
@@ -558,7 +558,7 @@ async function initDiffPanel() {
                                 ? "disabled"
                                 : "") +
                             ">" +
-                            esc(v.label || "Version") +
+                            Roaster.esc(v.label || "Version") +
                             "</option>"
                         );
                     })
@@ -566,14 +566,14 @@ async function initDiffPanel() {
                 '</select><button id="full-diff-compare" type="button" class="h-8 px-3 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">Compare</button></div><div id="full-diff-result" class="mt-5"></div>',
         );
         drawIcons();
-        $$("[data-full-diff-mode]").forEach(function (b) {
+        $Roaster.$("[data-full-diff-mode]").forEach(function (b) {
             b.onclick = function () {
                 mode = b.dataset.fullDiffMode;
                 shell();
                 load();
             };
         });
-        $("#full-diff-from").onchange = function () {
+        Roaster.$("#full-diff-from").onchange = function () {
             fromId = this.value;
             if (String(fromId) === String(toId)) {
                 var alt = versions.find(function (v) {
@@ -584,7 +584,7 @@ async function initDiffPanel() {
             shell();
             load();
         };
-        $("#full-diff-to").onchange = function () {
+        Roaster.$("#full-diff-to").onchange = function () {
             toId = this.value;
             if (String(fromId) === String(toId)) {
                 var alt = versions.find(function (v) {
@@ -595,10 +595,10 @@ async function initDiffPanel() {
             shell();
             load();
         };
-        $("#full-diff-compare").onclick = load;
+        Roaster.$("#full-diff-compare").onclick = load;
     }
     async function load() {
-        var box = $("#full-diff-result");
+        var box = Roaster.$("#full-diff-result");
         if (!box) return;
         if (!fromId || !toId || String(fromId) === String(toId)) {
             box.innerHTML =
@@ -608,7 +608,7 @@ async function initDiffPanel() {
         box.innerHTML =
             '<div class="h-[300px] animate-pulse bg-[var(--surface-2)] rounded-2xl"></div>';
         try {
-            var d = await api(
+            var d = await Roaster.api(
                 "/resumes/" +
                     encodeURIComponent(id) +
                     "/diff?from=" +
@@ -653,13 +653,13 @@ async function initDiffPanel() {
                 (net > 0 ? "+" : net < 0 ? "" : "±") +
                 net +
                 '</div><span class="text-[11px] text-[var(--ink-muted)]">chars</span></div><div class="ml-auto text-right"><div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">Comparing</div><div class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold">' +
-                esc(fromLabel) +
-                icon("arrow-right", "w-3 h-3") +
-                esc(toLabel) +
+                Roaster.esc(fromLabel) +
+                Roaster.icon("arrow-right", "w-3 h-3") +
+                Roaster.esc(toLabel) +
                 '</div></div></div></div><div class="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden mt-5"><div class="h-10 px-4 flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-2)]/60"><div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">' +
-                icon("file-text", "w-3 h-3") +
+                Roaster.icon("file-text", "w-3 h-3") +
                 " Inline diff · " +
-                esc(mode) +
+                Roaster.esc(mode) +
                 '</div><div class="flex items-center gap-3 text-[10px] text-[var(--ink-muted)]"><span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-[var(--accent-soft)] border border-[var(--accent)]/30"></span>Added</span><span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-[#F8E3E0] border border-[var(--danger)]/30"></span>Removed</span></div></div><div class="p-5 max-h-[600px] overflow-auto font-mono text-[13px] leading-[1.75] whitespace-pre-wrap">' +
                 parts
                     .map(function (p) {
@@ -678,7 +678,7 @@ async function initDiffPanel() {
                             '<span class="' +
                             cls +
                             '">' +
-                            esc(p.value || "") +
+                            Roaster.esc(p.value || "") +
                             "</span>"
                         );
                     })
@@ -688,7 +688,7 @@ async function initDiffPanel() {
         } catch (e) {
             box.innerHTML =
                 '<div class="text-xs text-[var(--danger)] bg-[#F8E3E0] rounded-xl px-3 py-2">' +
-                esc(e.message) +
+                Roaster.esc(e.message) +
                 "</div>";
             drawIcons();
         }
@@ -698,19 +698,19 @@ async function initDiffPanel() {
 }
 
 async function authPage(type) {
-    var form = $("#" + type + "-form");
+    var form = Roaster.$("#" + type + "-form");
     if (!form) return;
     form.onsubmit = async function (e) {
         e.preventDefault();
         var data = Object.fromEntries(new FormData(form).entries());
-        var btn = $("#" + type + "-submit"),
-            err = $("#" + type + "-error");
+        var btn = Roaster.$("#" + type + "-submit"),
+            err = Roaster.$("#" + type + "-error");
         btn.disabled = true;
         err.classList.add("hidden");
 
         try {
             console.log("Submitting to API:", "/" + type, data);
-            var d = await api("/" + type, { 
+            var d = await Roaster.api("/" + type, { 
                 method: "POST", 
                 body: data 
             });
@@ -723,7 +723,7 @@ async function authPage(type) {
             if (!d.token) 
                 throw new Error((d && d.message) || "No authentication token was returned by the server.");
 
-            window.Roaster.saveToken(d.token);
+            Roaster.saveToken(d.token);
             location.href = "/dashboard";
         } catch (ex) {
             console.error("Auth error details:", ex);
@@ -740,7 +740,7 @@ async function authPage(type) {
 }
 
 function landing() {
-    var c = $("#landing-preview-chart");
+    var c = Roaster.$("#landing-preview-chart");
     if (c && window.Chart)
         new Chart(c, {
             type: "line",
@@ -800,20 +800,3 @@ async function main() {
 document.addEventListener("DOMContentLoaded", function () {
     main();
 });
-
-// The elements can now be used by using Roaster.[elementName]
-window.$ = Roaster.$;
-window.$$ = Roaster.$$;
-window.esc = Roaster.esc;
-window.token = Roaster.token;
-window.saveToken = Roaster.saveToken;
-window.clearToken = Roaster.clearToken;
-window.icon = Roaster.icon;
-window.drawIcons = Roaster.drawIcons;
-window.badge = Roaster.badge;
-window.card = Roaster.card;
-window.empty = Roaster.empty;
-window.pageHeader = Roaster.pageHeader;
-window.relativeTime = Roaster.relativeTime;
-window.toast = Roaster.toast;
-window.api = Roaster.api.bind(Roaster);
