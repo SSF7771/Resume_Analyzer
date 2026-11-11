@@ -188,6 +188,7 @@ async function api(path, options) {
         method: options.method || "GET",
         headers: headers,
         body: body,
+        redirect: "manual"
     });
 
     var data = null,
