@@ -96,7 +96,7 @@ window.Roaster = Object.assign(window.Roaster || {}, {
     },
 
     toast: function (title, description, variant) {
-        var root = this.Roaster.$("#toast-root");
+        var root = this.$("#toast-root");
         if (!root) return;
 
         var err = variant === "error";
@@ -122,7 +122,7 @@ window.Roaster = Object.assign(window.Roaster || {}, {
             '</div><button class="text-[var(--ink-muted)] text-lg leading-none">×</button>';
 
         root.appendChild(el);
-        this.Roaster.drawIcons();
+        this.drawIcons();
 
         var close = function () {
             el.remove();
