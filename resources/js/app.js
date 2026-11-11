@@ -41,7 +41,8 @@ window.Roaster = Object.assign(window.Roaster || {}, {
         `<i data-lucide="${name}" class="${cls}"></i>`,
 
     drawIcons: () => {
-        if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons)
+            window.lucide.createIcons();
     },
 
     badge: function (text, tone = "neutral") {
@@ -146,7 +147,9 @@ window.Roaster = Object.assign(window.Roaster || {}, {
         }
 
         const base = (this.apiBase || "/api").replace(/\/+$/, "");
-        const url = path.startsWith("http") ? path : `${base}${path.startsWith("/") ? path : "/" + path}`;
+        const url = path.startsWith("http")
+            ? path
+            : `${base}${path.startsWith("/") ? path : "/" + path}`;
 
         console.log("URL being used: ", url);
 
@@ -156,7 +159,18 @@ window.Roaster = Object.assign(window.Roaster || {}, {
             body,
         });
 
-        const data = await res.json().catch(() => null);
+        const rawText = await res.text();
+        console.log("HTTP Status:", res.status);
+        console.log("Raw Response from server:", rawText);
+
+        let data = null;
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            console.error("JSON Parse Error:", e);
+            console.error("Failed to parse this raw text as JSON:", rawText);
+        }
+        
         if (!res.ok) {
             const msg =
                 data?.message ||
@@ -182,11 +196,16 @@ function hydrateUser(u) {
     if (!u) return;
     var name = u.name || "Account";
     if (Roaster.$("#sidebar-avatar"))
-        Roaster.$("#sidebar-avatar").textContent = (name[0] || "R").toUpperCase();
-    if (Roaster.$("#sidebar-name")) Roaster.$("#sidebar-name").textContent = name;
-    if (Roaster.$("#sidebar-email")) Roaster.$("#sidebar-email").textContent = u.email || "";
+        Roaster.$("#sidebar-avatar").textContent = (
+            name[0] || "R"
+        ).toUpperCase();
+    if (Roaster.$("#sidebar-name"))
+        Roaster.$("#sidebar-name").textContent = name;
+    if (Roaster.$("#sidebar-email"))
+        Roaster.$("#sidebar-email").textContent = u.email || "";
     if (Roaster.$("#topbar-first-name"))
-        Roaster.$("#topbar-first-name").textContent = name.split(" ")[0] || "there";
+        Roaster.$("#topbar-first-name").textContent =
+            name.split(" ")[0] || "there";
 }
 
 async function ensureAuth() {
@@ -215,8 +234,8 @@ function initTheme() {
 
         // If theme is dark, show 'sun' (meaning click to go light).
         // If theme is light, show 'moon' (meaning click to go dark).
-        var iconName = (theme === "dark") ? "sun" : "moon";
-        
+        var iconName = theme === "dark" ? "sun" : "moon";
+
         // Only update if it's different to prevent unnecessary DOM flashing
         if (b.getAttribute("data-current-icon") !== iconName) {
             b.innerHTML = Roaster.icon(iconName, "w-4 h-4");
@@ -226,15 +245,17 @@ function initTheme() {
     }
 
     function applyTheme(theme) {
-        if (theme === "dark") 
-            document.documentElement.classList.add("dark");
-        else
-            document.documentElement.classList.remove("dark");
+        if (theme === "dark") document.documentElement.classList.add("dark");
+        else document.documentElement.classList.remove("dark");
 
         // Update charts if they exist
         if (window.myChartInstance) {
-            const gridColor = getComputedStyle(document.documentElement).getPropertyValue("--grid-color").trim();
-            const borderColor = getComputedStyle(document.documentElement).getPropertyValue("--chart-accent").trim();
+            const gridColor = getComputedStyle(document.documentElement)
+                .getPropertyValue("--grid-color")
+                .trim();
+            const borderColor = getComputedStyle(document.documentElement)
+                .getPropertyValue("--chart-accent")
+                .trim();
             window.myChartInstance.data.datasets[0].borderColor = borderColor;
             window.myChartInstance.options.scales.y.grid.color = gridColor;
             window.myChartInstance.update();
@@ -246,9 +267,12 @@ function initTheme() {
 
     // Determine theme's current state (Checks LocalStorage -> OS Preference)
     var savedTheme = localStorage.getItem("arr-theme");
-    var initialTheme = savedTheme === "light" || savedTheme === "dark" 
-        ? savedTheme 
-        : (mediaQuery.matches ? "dark" : "light");
+    var initialTheme =
+        savedTheme === "light" || savedTheme === "dark"
+            ? savedTheme
+            : mediaQuery.matches
+              ? "dark"
+              : "light";
 
     applyTheme(initialTheme);
 
@@ -277,12 +301,16 @@ function initTheme() {
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
-                var currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+                var currentTheme = document.documentElement.classList.contains(
+                    "dark",
+                )
+                    ? "dark"
+                    : "light";
                 updateToggleButton(currentTheme);
             }
         });
     });
-    
+
     observer.observe(document.documentElement, { attributes: true });
 }
 
@@ -307,7 +335,8 @@ function initShell() {
     $Roaster.$('[data-action="logout"]').forEach(function (b) {
         b.onclick = async function () {
             try {
-                if (Roaster.token()) await Roaster.api("/logout", { method: "POST" });
+                if (Roaster.token())
+                    await Roaster.api("/logout", { method: "POST" });
             } catch (e) {}
 
             Roaster.clearToken();
@@ -319,10 +348,13 @@ function initShell() {
             Roaster.$("#command-palette").classList.remove("hidden");
     };
     var close = function () {
-        Roaster.$("#command-palette") && Roaster.$("#command-palette").classList.add("hidden");
+        Roaster.$("#command-palette") &&
+            Roaster.$("#command-palette").classList.add("hidden");
     };
-    Roaster.$("#open-search") && Roaster.$("#open-search").addEventListener("click", open);
-    Roaster.$("#mobile-search") && Roaster.$("#mobile-search").addEventListener("click", open);
+    Roaster.$("#open-search") &&
+        Roaster.$("#open-search").addEventListener("click", open);
+    Roaster.$("#mobile-search") &&
+        Roaster.$("#mobile-search").addEventListener("click", open);
     document.addEventListener("keydown", function (e) {
         if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "f") {
             e.preventDefault();
@@ -350,7 +382,9 @@ function initCommandPalette() {
 
         try {
             // Search via your API
-            const data = await Roaster.api("/search?q=" + encodeURIComponent(query));
+            const data = await Roaster.api(
+                "/search?q=" + encodeURIComponent(query),
+            );
 
             if (!data.length) {
                 results.innerHTML =
@@ -647,18 +681,25 @@ async function authPage(type) {
 
         try {
             console.log("Submitting to API:", "/" + type, data);
-            var d = await Roaster.api("/" + type, { 
-                method: "POST", 
-                body: data 
+            var d = await Roaster.api("/" + type, {
+                method: "POST",
+                body: data,
             });
 
             console.log("Response from api():", d);
 
-            if (!d || typeof d !== "object") 
-                throw new Error("Server returned an invalid response (expected JSON, got: " + typeof d + ")");
+            if (!d || typeof d !== "object")
+                throw new Error(
+                    "Server returned an invalid response (expected JSON, got: " +
+                        typeof d +
+                        ")",
+                );
 
-            if (!d.token) 
-                throw new Error((d && d.message) || "No authentication token was returned by the server.");
+            if (!d.token)
+                throw new Error(
+                    (d && d.message) ||
+                        "No authentication token was returned by the server.",
+                );
 
             Roaster.saveToken(d.token);
             location.href = "/dashboard";
