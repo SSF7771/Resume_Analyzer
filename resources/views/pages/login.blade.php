@@ -88,8 +88,7 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                console.log("Submitting to API:", "/" + type, data);
-                var d = await Roaster.api("/" + type, {
+                var d = await Roaster.api("/", {
                     method: "POST",
                     body: data
                 });
