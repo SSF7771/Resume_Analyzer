@@ -181,7 +181,7 @@ async function api(path, options) {
     var headers = new Headers(options.headers || {});
     headers.set("Accept", "application/json");
 
-    var t = window.Roaster.token();
+    var t = window.Roaster?.token ? window.Roaster.token() : null;
     if (t) headers.set("Authorization", "Bearer " + t);
 
     var body = options.body;
@@ -197,6 +197,8 @@ async function api(path, options) {
     var url = /^https?:\/\//i.test(path)
         ? path
         : base + (path.startsWith("/") ? path : "/" + path);
+
+    console.log("Fetching URL:", url); // <--- DEBUG 1: See exact URL
 
     var res = await fetch(url, {
         method: options.method || "GET",
@@ -247,6 +249,7 @@ function hydrateUser(u) {
     if ($("#topbar-first-name"))
         $("#topbar-first-name").textContent = name.split(" ")[0] || "there";
 }
+
 async function ensureAuth() {
     if (!window.Roaster.token()) {
         location.href = "/login";
