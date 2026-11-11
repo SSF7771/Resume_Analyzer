@@ -682,13 +682,13 @@ async function authPage(type) {
         err.classList.add("hidden");
 
         try {
-            // 1. Use the apiBase defined in window.ROASTER or prepend /api
+            // Use the apiBase defined in window.ROASTER or prepend /api
             var baseUrl = window.ROASTER?.apiBase || "/api";
             var url = baseUrl.replace(/\/+$/, '') + "/" + type;
 
             console.log("Submitting to API path:", url, data);
 
-            // 2. Send Accept & Content-Type headers, and stringify data
+            // Send Accept & Content-Type headers, and stringify data
             var d = await api(url, { 
                 method: "POST",
                 headers: {
