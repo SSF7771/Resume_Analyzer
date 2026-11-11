@@ -1,7 +1,13 @@
 // Configuration
-const cfg = window.Roaster || { apiBase: "/api", tokenKey: "auth_token" };
+const existingConfig = window.Roaster || {};
+const apiBase = existingConfig.apiBase || "/api";
+const tokenKey = existingConfig.tokenKey || "auth_token";
 
-window.Roaster = {
+// Merge all methods into window.Roaster instead of overwriting it
+window.Roaster = Object.assign(window.Roaster || {}, {
+    apiBase: apiBase,
+    tokenKey: tokenKey,
+
     // Utilities
     $: (s, c) => (c || document).querySelector(s),
     $$: (s, c) => Array.from((c || document).querySelectorAll(s)),
@@ -20,9 +26,15 @@ window.Roaster = {
     },
 
     // Auth Helpers
-    token: () => localStorage.getItem(cfg.tokenKey),
-    saveToken: (t) => t && localStorage.setItem(cfg.tokenKey, t),
-    clearToken: () => localStorage.removeItem(cfg.tokenKey),
+    token: function () {
+        return localStorage.getItem(this.tokenKey);
+    },
+    saveToken: function (t) {
+        if (t) localStorage.setItem(this.tokenKey, t);
+    },
+    clearToken: function () {
+        localStorage.removeItem(this.tokenKey);
+    },
 
     // UI Components
     icon: (name, cls = "w-4 h-4") =>
@@ -48,25 +60,25 @@ window.Roaster = {
 
     empty: function (ic, title, desc, action = "") {
         return `
-                <div class="rounded-[20px] border border-[var(--border)] bg-[var(--surface)] shadow-card p-8 flex flex-col items-center justify-center text-center min-h-[220px]">
-                    <div class="h-14 w-14 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent-strong)] flex items-center justify-center mb-4">
-                        ${this.icon(ic, "w-6 h-6")}
-                    </div>
-                    <div class="font-display text-lg font-semibold">${this.esc(title)}</div>
-                    <p class="text-sm text-[var(--ink-muted)] mt-1 max-w-sm">${this.esc(desc)}</p>
-                    ${action ? `<div class="mt-4">${action}</div>` : ""}
-                </div>`;
+            <div class="rounded-[20px] border border-[var(--border)] bg-[var(--surface)] shadow-card p-8 flex flex-col items-center justify-center text-center min-h-[220px]">
+                <div class="h-14 w-14 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent-strong)] flex items-center justify-center mb-4">
+                    ${this.icon(ic, "w-6 h-6")}
+                </div>
+                <div class="font-display text-lg font-semibold">${this.esc(title)}</div>
+                <p class="text-sm text-[var(--ink-muted)] mt-1 max-w-sm">${this.esc(desc)}</p>
+                ${action ? `<div class="mt-4">${action}</div>` : ""}
+            </div>`;
     },
 
     pageHeader: function (title, desc = "", action = "") {
         return `
-                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-                    <div>
-                        <h2 class="font-display text-3xl font-semibold tracking-tight">${this.esc(title)}</h2>
-                        <p class="text-sm text-[var(--ink-muted)] mt-1">${this.esc(desc)}</p>
-                    </div>
-                    ${action}
-                </div>`;
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="font-display text-3xl font-semibold tracking-tight">${this.esc(title)}</h2>
+                    <p class="text-sm text-[var(--ink-muted)] mt-1">${this.esc(desc)}</p>
+                </div>
+                ${action}
+            </div>`;
     },
 
     relativeTime: function (date) {
@@ -84,14 +96,14 @@ window.Roaster = {
     },
 
     toast: function (title, description, variant) {
-        var root = this.$("#toast-root"); // using internal $ helper
+        var root = this.$("#toast-root");
         if (!root) return;
-        
+
         var err = variant === "error";
         var el = document.createElement("div");
         el.className =
             "pointer-events-auto bg-[var(--surface)] border border-[var(--border)] shadow-hover rounded-2xl p-3.5 flex items-start gap-3 page-enter";
-        
+
         el.innerHTML =
             '<div class="h-8 w-8 rounded-xl flex items-center justify-center ' +
             (err
@@ -108,10 +120,10 @@ window.Roaster = {
                   "</div>"
                 : "") +
             '</div><button class="text-[var(--ink-muted)] text-lg leading-none">×</button>';
-            
+
         root.appendChild(el);
         this.drawIcons();
-        
+
         var close = function () {
             el.remove();
         };
@@ -123,6 +135,7 @@ window.Roaster = {
     api: async function (path, options = {}) {
         const headers = new Headers(options.headers || {});
         headers.set("Accept", "application/json");
+
         const t = this.token();
         if (t) headers.set("Authorization", "Bearer " + t);
 
@@ -132,14 +145,14 @@ window.Roaster = {
             body = JSON.stringify(body);
         }
 
-        const res = await fetch(
-            (cfg.apiBase || "/api").replace(/\/$/, "") + path,
-            {
-                method: options.method || "GET",
-                headers,
-                body,
-            },
-        );
+        const base = (this.apiBase || "/api").replace(/\/+$/, "");
+        const url = path.startsWith("http") ? path : `${base}${path.startsWith("/") ? path : "/" + path}`;
+
+        const res = await fetch(url, {
+            method: options.method || "GET",
+            headers,
+            body,
+        });
 
         const data = await res.json().catch(() => null);
         if (!res.ok) {
@@ -149,11 +162,12 @@ window.Roaster = {
                 "Request failed";
             const err = new Error(msg);
             err.status = res.status;
+            err.data = data;
             throw err;
         }
         return data;
     },
-};
+});
 
 // Helper for chart's responsive coloring
 function getComputedColor(variableName) {
