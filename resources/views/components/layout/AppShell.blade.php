@@ -1,1 +1,8 @@
-<div class="min-h-screen flex bg-[var(--background)]"><div class="no-print">@include('components.layout.Sidebar')</div><main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full"><div class="no-print">@include('components.layout.Topbar')</div>{{ $slot }}</main></div>@include('components.layout.CommandPalette')
+<div class="min-h-screen flex bg-[var(--background)]">
+    <div class="no-print">@include('components.layout.Sidebar')</div>
+    <main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
+        <div class="no-print">@include('components.layout.Topbar')</div>
+        {{ $slot }}
+    </main>
+</div>
+@include('components.layout.CommandPalette')

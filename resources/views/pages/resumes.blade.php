@@ -4,9 +4,9 @@
 
 @section('body')
     <div class="min-h-screen flex bg-[var(--background)]">
-        <div class="no-print">@include('components.layout.sidebar')</div>
+        <div class="no-print">@include('components.layout.Sidebar')</div>
         <main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
-            <div class="no-print">@include('components.layout.topbar')</div>
+            <div class="no-print">@include('components.layout.Topbar')</div>
 
             <div id="resumes-page" class="page-enter">
                 <div id="resumes-header-container"></div>

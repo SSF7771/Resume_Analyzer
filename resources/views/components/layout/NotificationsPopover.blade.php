@@ -1,1 +1,7 @@
-<div id="notifications-popover" class="hidden absolute right-0 mt-2 w-80 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-hover p-4 z-50"><div class="font-display font-semibold">Notifications</div><p class="text-xs text-[var(--muted-foreground)] mt-1">Analysis completions and version events will appear here.</p></div>
+<div id="notifications-popover"
+    class="hidden absolute right-0 mt-2 w-80 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-hover p-4 z-50">
+    <div class="font-display font-semibold">Notifications</div>
+    <p class="text-xs text-[var(--muted-foreground)] mt-1">
+        Analysis completions and version events will appear here.
+    </p>
+</div>
