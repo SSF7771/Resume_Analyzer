@@ -9,11 +9,20 @@
   <!-- Tailwindcss + Public css file -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+  @php
+    $appUrl = config('app.url');
+    // Ensure scheme exists if VERCEL_URL was used
+    if ($appUrl && !str_starts_with($appUrl, 'http://') && !str_starts_with($appUrl, 'https://'))
+      $appUrl = 'https://' . $appUrl;
+    
+    $apiBase = rtrim($appUrl, '/') . '/api';
+  @endphp
+
   <script>
-    window.Roaster = {
-      apiBase: "{{ rtrim(config('app.url'), '/') . '/api' }}",
+    window.Roaster = Object.assign(window.Roaster || {}, {
+      apiBase: "{{ $apiBase }}",
       tokenKey: 'auth_token'
-    };
+    });
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
