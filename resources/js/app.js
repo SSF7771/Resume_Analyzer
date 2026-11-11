@@ -697,6 +697,48 @@ async function initDiffPanel() {
     load();
 }
 
+async function authPage(type) {
+    var form = Roaster.$("#" + type + "-form");
+    if (!form) return;
+    form.onsubmit = async function (e) {
+        e.preventDefault();
+        var data = Object.fromEntries(new FormData(form).entries());
+        var btn = Roaster.$("#" + type + "-submit"),
+            err = Roaster.$("#" + type + "-error");
+        btn.disabled = true;
+        err.classList.add("hidden");
+
+        try {
+            console.log("Submitting to API:", "/" + type, data);
+            var d = await Roaster.api("/" + type, { 
+                method: "POST", 
+                body: data 
+            });
+
+            console.log("Response from api():", d);
+
+            if (!d || typeof d !== "object") 
+                throw new Error("Server returned an invalid response (expected JSON, got: " + typeof d + ")");
+
+            if (!d.token) 
+                throw new Error((d && d.message) || "No authentication token was returned by the server.");
+
+            Roaster.saveToken(d.token);
+            location.href = "/dashboard";
+        } catch (ex) {
+            console.error("Auth error details:", ex);
+            if (err) {
+                err.textContent = ex.message || "Failed to authenticate.";
+                err.classList.remove("hidden");
+            } else {
+                alert(ex.message || "Failed to authenticate.");
+            }
+        } finally {
+            btn.disabled = false;
+        }
+    };
+}
+
 function landing() {
     var c = Roaster.$("#landing-preview-chart");
     if (c && window.Chart)
