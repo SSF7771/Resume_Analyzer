@@ -23,16 +23,21 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Use Roaster helpers cleanly
             const $ = Roaster.$;
             const $$ = Roaster.$$;
             const esc = Roaster.esc;
             const icon = Roaster.icon;
             const card = Roaster.card;
-            const empty = Roaster.empty;
-            const pageHeader = Roaster.pageHeader;
-            const api = Roaster.api.bind(Roaster);
-            const toast = Roaster.toast;
+            const relativeTime = Roaster.relativeTime;
             const drawIcons = Roaster.drawIcons;
+
+            // Methods that rely on 'this.[something]':
+            const empty = Roaster.empty.bind(Roaster);
+            const badge = Roaster.badge.bind(Roaster);
+            const pageHeader = Roaster.pageHeader.bind(Roaster);
+            const toast = Roaster.toast.bind(Roaster);
+            const api = Roaster.api.bind(Roaster);
 
             async function renderSettings() {
                 var root = $("#settings-page");
