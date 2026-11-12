@@ -89,7 +89,7 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await Roaster.api("/register", {
+                const response = await Roaster.api("/auth/register", {
                     method: "POST",
                     body: data
                 });
