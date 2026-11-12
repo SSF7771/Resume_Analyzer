@@ -82,7 +82,7 @@
                                     ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Profile</div>${renderProfile(window.__user)}`)}
                                 </div>
                                 <div class="lg:col-span-2">
-                                    ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Latest ATS</div><div class="font-display text-5xl font-semibold tabular mt-5">${Roaster.esc(kpi.atsScore?.value ?? "-")}</div><div class="text-xs text-[var(--muted-foreground)] mt-1">/ 100</div>`)}
+                                    ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Latest ATS</div><div class="font-display text-5xl font-semibold tabular mt-5">${Roaster.Roaster.esc(kpi.atsScore?.value ?? "-")}</div><div class="text-xs text-[var(--muted-foreground)] mt-1">/ 100</div>`)}
                                 </div>
                             </div>
 
@@ -115,13 +115,13 @@
             return `
             <div class="flex flex-col items-center text-center mt-4">
                 <div class="h-16 w-16 rounded-full bg-[var(--accent-soft)] text-[var(--accent-strong)] flex items-center justify-center text-xl font-semibold">
-                    ${esc((user.name || "R")[0].toUpperCase())}
+                    ${Roaster.esc((user.name || "R")[0].toUpperCase())}
                 </div>
                 <div class="font-display font-semibold mt-3">
-                    ${esc(user.name || "Account")}
+                    ${Roaster.esc(user.name || "Account")}
                 </div>
                 <div class="text-xs text-[var(--ink-muted)] mt-1">
-                    ${esc(user.email || "")}
+                    ${Roaster.esc(user.email || "")}
                 </div>
             </div>
         `;
@@ -147,14 +147,14 @@
 
             return stats
                 .map((s) =>
-                    card(`
+                    Roaster.card(`
                                 <div class="flex items-center gap-3">
                                     <div class="h-9 w-9 rounded-2xl bg-[var(--secondary)] text-[var(--primary)] flex items-center justify-center">
-                                        ${icon(s[2])}
+                                        ${Roaster.icon(s[2])}
                                     </div>
                                     <div>
                                         <div class="text-xs text-[var(--muted-foreground)]">${s[0]}</div>
-                                        <div class="font-display tabular text-3xl font-semibold tracking-tight mt-1">${esc(s[1])}</div>
+                                        <div class="font-display tabular text-3xl font-semibold tracking-tight mt-1">${Roaster.esc(s[1])}</div>
                                         ${s[3] != null ? `<div class="text-[10px] text-[var(--success)] mt-1">${s[3] >= 0 ? "+" : ""}${s[3]} vs prev</div>` : ""}
                                     </div>
                                 </div>
@@ -173,15 +173,15 @@
                 <div class="flex items-center justify-between p-3 rounded-2xl bg-[var(--surface-2)]">
                     <div class="flex items-center gap-3">
                         <div class="h-8 w-8 rounded-lg bg-[var(--accent-soft)] flex items-center justify-center">
-                            ${icon(v.title === "Upload" ? "file-text" : "wand-2", "w-4 h-4")}
+                            ${Roaster.icon(v.title === "Upload" ? "file-text" : "wand-2", "w-4 h-4")}
                         </div>
                         <div>
-                            <div class="text-sm font-medium">${esc(v.label)}</div>
-                            <div class="text-xs text-[var(--ink-muted)]">${esc(v.title)}</div>
+                            <div class="text-sm font-medium">${Roaster.esc(v.label)}</div>
+                            <div class="text-xs text-[var(--ink-muted)]">${Roaster.esc(v.title)}</div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="font-display font-semibold">${esc(v.score)}</div>
+                        <div class="font-display font-semibold">${Roaster.esc(v.score)}</div>
                         <div class="text-[10px] ${v.delta > 0 ? "text-[var(--success)]" : "text-[var(--danger)]"}">
                             ${v.delta > 0 ? "+" : ""}${v.delta}
                         </div>
@@ -201,11 +201,11 @@
                     (e) => `
                             <a href="/resumes/${encodeURIComponent(e.resumeId)}" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-[var(--surface-2)] transition-colors">
                                 <div class="h-8 w-8 rounded-xl bg-[var(--surface-2)] flex items-center justify-center text-[var(--ink-muted)]">
-                                    ${icon(e.type === "upload" ? "upload" : e.type === "rewrite" ? "wand-2" : "sparkles", "w-4 h-4")}
+                                    ${Roaster.icon(e.type === "upload" ? "upload" : e.type === "rewrite" ? "wand-2" : "sparkles", "w-4 h-4")}
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium">${esc(e.title)}</div>
-                                    <div class="text-xs text-[var(--ink-muted)] mt-0.5">${esc(e.subtitle)} · ${relativeTime(e.at)}</div>
+                                    <div class="text-sm font-medium">${Roaster.esc(e.title)}</div>
+                                    <div class="text-xs text-[var(--ink-muted)] mt-0.5">${Roaster.esc(e.subtitle)} · ${Roaster.relativeTime(e.at)}</div>
                                 </div>
                             </a>
                         `,
