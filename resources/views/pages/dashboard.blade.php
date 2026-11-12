@@ -82,7 +82,7 @@
                                     ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Profile</div>${renderProfile(window.__user)}`)}
                                 </div>
                                 <div class="lg:col-span-2">
-                                    ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Latest ATS</div><div class="font-display text-5xl font-semibold tabular mt-5">${Roaster.Roaster.esc(kpi.atsScore?.value ?? "-")}</div><div class="text-xs text-[var(--muted-foreground)] mt-1">/ 100</div>`)}
+                                    ${Roaster.card(`<div class="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)] font-semibold">Latest ATS</div><div class="font-display text-5xl font-semibold tabular mt-5">${Roaster.esc(kpi.atsScore?.value ?? "-")}</div><div class="text-xs text-[var(--muted-foreground)] mt-1">/ 100</div>`)}
                                 </div>
                             </div>
 
