@@ -27,14 +27,16 @@
             const $$ = Roaster.$$;
             const esc = Roaster.esc;
             const icon = Roaster.icon;
-            const badge = Roaster.badge;
             const card = Roaster.card;
-            const empty = Roaster.empty;
-            const pageHeader = Roaster.pageHeader;
             const relativeTime = Roaster.relativeTime;
-            const api = Roaster.api.bind(Roaster);
-            const toast = Roaster.toast;
             const drawIcons = Roaster.drawIcons;
+
+            // Methods that rely on 'this.[something]':
+            const empty = Roaster.empty.bind(Roaster);
+            const badge = Roaster.badge.bind(Roaster);
+            const pageHeader = Roaster.pageHeader.bind(Roaster);
+            const toast = Roaster.toast.bind(Roaster);
+            const api = Roaster.api.bind(Roaster);
 
             async function renderResumeDetail() {
                 var root = $("#resume-detail-page");
@@ -192,12 +194,12 @@
                                         .join("")
                                     : '<div class="text-sm text-[var(--ink-muted)] py-8 text-center">No rewrites suggested.</div>') +
                                 `</div><div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-[var(--border)]"><button id="apply-selected" class="h-11 px-5 rounded-2xl border border-[var(--border)] hover:bg-[var(--surface-2)] font-semibold text-sm transition-all shadow-sm">
-                                                Apply selected
-                                                </button>
-                                                <button id="apply-all" class="h-11 px-6 rounded-2xl text-white font-semibold text-sm shadow-md hover:opacity-95 transition-all" style="background:linear-gradient(135deg,#3B6E8C,#1A3644)">
-                                                Apply all → new version
-                                                </button>
-                                            </div>`,
+                                                    Apply selected
+                                                    </button>
+                                                    <button id="apply-all" class="h-11 px-6 rounded-2xl text-white font-semibold text-sm shadow-md hover:opacity-95 transition-all" style="background:linear-gradient(135deg,#3B6E8C,#1A3644)">
+                                                    Apply all → new version
+                                                    </button>
+                                                </div>`,
                             );
                         }
                         if (tab === "diff") {
