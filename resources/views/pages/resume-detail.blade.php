@@ -194,12 +194,12 @@
                                         .join("")
                                     : '<div class="text-sm text-[var(--ink-muted)] py-8 text-center">No rewrites suggested.</div>') +
                                 `</div><div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-[var(--border)]"><button id="apply-selected" class="h-11 px-5 rounded-2xl border border-[var(--border)] hover:bg-[var(--surface-2)] font-semibold text-sm transition-all shadow-sm">
-                                                    Apply selected
-                                                    </button>
-                                                    <button id="apply-all" class="h-11 px-6 rounded-2xl text-white font-semibold text-sm shadow-md hover:opacity-95 transition-all" style="background:linear-gradient(135deg,#3B6E8C,#1A3644)">
-                                                    Apply all → new version
-                                                    </button>
-                                                </div>`,
+                                                        Apply selected
+                                                        </button>
+                                                        <button id="apply-all" class="h-11 px-6 rounded-2xl text-white font-semibold text-sm shadow-md hover:opacity-95 transition-all" style="background:linear-gradient(135deg,#3B6E8C,#1A3644)">
+                                                        Apply all → new version
+                                                        </button>
+                                                    </div>`,
                             );
                         }
                         if (tab === "diff") {
@@ -564,6 +564,215 @@
                     );
                     drawIcons();
                 }
+            }
+
+            // Helper function for initialization of Version Differencial panel -> resume-detail page
+            async function initDiffPanel() {
+                var root = Roaster.$("#full-diff-panel");
+                if (!root) return;
+                var id = getPageId();
+                var versions = window.__resumeVersions || [];
+                if (versions.length < 2) {
+                    root.innerHTML = Roaster.empty(
+                        "git-compare",
+                        "Need two versions to compare",
+                        "Apply rewrites or upload a new version to see diffs here.",
+                    );
+                    Roaster.drawIcons();
+                    return;
+                }
+                var mode = "words",
+                    fromId = versions[versions.length - 2].id,
+                    toId = versions[versions.length - 1].id;
+                function shell() {
+                    root.innerHTML = Roaster.card(
+                        '<div class="flex items-start justify-between gap-4 flex-wrap"><div><div class="font-display text-base font-semibold">Version Diff</div><div class="text-sm text-[var(--ink-muted)] mt-1">Compare what changed between any two versions</div></div><div class="inline-flex items-center gap-1 bg-[var(--surface-2)] border border-[var(--border)] p-1 rounded-full">' +
+                        ["words", "lines"]
+                            .map(function (m) {
+                                return (
+                                    '<button type="button" data-full-diff-mode="' +
+                                    m +
+                                    '" class="h-7 px-3 rounded-full text-[11px] font-semibold ' +
+                                    (mode === m
+                                        ? "bg-[var(--ink)] text-[var(--bg)]"
+                                        : "text-[var(--ink-muted)]") +
+                                    '">' +
+                                    m +
+                                    "</button>"
+                                );
+                            })
+                            .join("") +
+                        "</div></div>" +
+                        '<div class="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)]/60 p-3 mt-5 flex items-center justify-center gap-3 flex-wrap"><span class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">From</span><select id="full-diff-from" class="h-8 px-3 rounded-full border border-[var(--border)] bg-[var(--surface)] text-xs">' +
+                        versions
+                            .map(function (v) {
+                                return (
+                                    '<option value="' +
+                                    Roaster.esc(v.id) +
+                                    '" ' +
+                                    (String(v.id) === String(fromId)
+                                        ? "selected"
+                                        : "") +
+                                    " " +
+                                    (String(v.id) === String(toId) ? "disabled" : "") +
+                                    ">" +
+                                    Roaster.esc(v.label || "Version") +
+                                    "</option>"
+                                );
+                            })
+                            .join("") +
+                        '</select><div class="h-8 w-8 rounded-full flex items-center justify-center text-white shadow-card" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">' +
+                        Roaster.icon("arrow-right", "w-4 h-4") +
+                        '</div><span class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">To</span><select id="full-diff-to" class="h-8 px-3 rounded-full border border-[var(--border)] bg-[var(--surface)] text-xs">' +
+                        versions
+                            .map(function (v) {
+                                return (
+                                    '<option value="' +
+                                    Roaster.esc(v.id) +
+                                    '" ' +
+                                    (String(v.id) === String(toId) ? "selected" : "") +
+                                    " " +
+                                    (String(v.id) === String(fromId)
+                                        ? "disabled"
+                                        : "") +
+                                    ">" +
+                                    Roaster.esc(v.label || "Version") +
+                                    "</option>"
+                                );
+                            })
+                            .join("") +
+                        '</select><button id="full-diff-compare" type="button" class="h-8 px-3 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">Compare</button></div><div id="full-diff-result" class="mt-5"></div>',
+                    );
+                    Roaster.drawIcons();
+                    Roaster.$("[data-full-diff-mode]").forEach(function (b) {
+                        b.onclick = function () {
+                            mode = b.dataset.fullDiffMode;
+                            shell();
+                            load();
+                        };
+                    });
+                    Roaster.$("#full-diff-from").onchange = function () {
+                        fromId = this.value;
+                        if (String(fromId) === String(toId)) {
+                            var alt = versions.find(function (v) {
+                                return String(v.id) !== String(fromId);
+                            });
+                            if (alt) toId = alt.id;
+                        }
+                        shell();
+                        load();
+                    };
+                    Roaster.$("#full-diff-to").onchange = function () {
+                        toId = this.value;
+                        if (String(fromId) === String(toId)) {
+                            var alt = versions.find(function (v) {
+                                return String(v.id) !== String(toId);
+                            });
+                            if (alt) fromId = alt.id;
+                        }
+                        shell();
+                        load();
+                    };
+                    Roaster.$("#full-diff-compare").onclick = load;
+                }
+                async function load() {
+                    var box = Roaster.$("#full-diff-result");
+                    if (!box) return;
+                    if (!fromId || !toId || String(fromId) === String(toId)) {
+                        box.innerHTML =
+                            '<div class="text-sm text-[var(--ink-muted)]">Select two different versions.</div>';
+                        return;
+                    }
+                    box.innerHTML =
+                        '<div class="h-[300px] animate-pulse bg-[var(--surface-2)] rounded-2xl"></div>';
+                    try {
+                        var d = await api(
+                            "/resumes/" +
+                            encodeURIComponent(id) +
+                            "/diff?from=" +
+                            encodeURIComponent(fromId) +
+                            "&to=" +
+                            encodeURIComponent(toId) +
+                            "&mode=" +
+                            encodeURIComponent(mode),
+                        );
+
+                        var stats = d.stats || {},
+                            added = Number(stats.added || 0),
+                            removed = Number(stats.removed || 0),
+                            net = added - removed,
+                            parts = d.parts || [];
+
+                        console.log("Raw parts from API:", parts);
+                        var fromLabel =
+                            (
+                                versions.find(function (v) {
+                                    return String(v.id) === String(fromId);
+                                }) || {}
+                            ).label || "-";
+                        var toLabel =
+                            (
+                                versions.find(function (v) {
+                                    return String(v.id) === String(toId);
+                                }) || {}
+                            ).label || "-";
+                        box.innerHTML =
+                            '<div class="relative rounded-2xl border border-[var(--border)] p-5 overflow-hidden" style="background:linear-gradient(135deg,var(--accent-soft) 0%,var(--surface-2) 70%,var(--surface) 100%)"><div class="flex items-end gap-8 flex-wrap"><div><div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">Added</div><div class="font-display tabular text-[40px] font-semibold text-[var(--accent-strong)] mt-1">+' +
+                            added +
+                            '</div><span class="text-[11px] text-[var(--ink-muted)]">chars</span></div><div class="h-10 w-px bg-[var(--border)]"></div><div><div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">Removed</div><div class="font-display tabular text-[40px] font-semibold text-[var(--danger)] mt-1">−' +
+                            removed +
+                            '</div><span class="text-[11px] text-[var(--ink-muted)]">chars</span></div><div class="h-10 w-px bg-[var(--border)]"></div><div><div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">Net change</div><div class="font-display tabular text-[26px] font-semibold mt-2 ' +
+                            (net > 0
+                                ? "text-[var(--accent-strong)]"
+                                : net < 0
+                                    ? "text-[var(--danger)]"
+                                    : "text-[var(--ink-muted)]") +
+                            '">' +
+                            (net > 0 ? "+" : net < 0 ? "" : "±") +
+                            net +
+                            '</div><span class="text-[11px] text-[var(--ink-muted)]">chars</span></div><div class="ml-auto text-right"><div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">Comparing</div><div class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold">' +
+                            Roaster.esc(fromLabel) +
+                            Roaster.icon("arrow-right", "w-3 h-3") +
+                            Roaster.esc(toLabel) +
+                            '</div></div></div></div><div class="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden mt-5"><div class="h-10 px-4 flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-2)]/60"><div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-muted)]">' +
+                            Roaster.icon("file-text", "w-3 h-3") +
+                            " Inline diff · " +
+                            Roaster.esc(mode) +
+                            '</div><div class="flex items-center gap-3 text-[10px] text-[var(--ink-muted)]"><span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-[var(--accent-soft)] border border-[var(--accent)]/30"></span>Added</span><span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-[#F8E3E0] border border-[var(--danger)]/30"></span>Removed</span></div></div><div class="p-5 max-h-[600px] overflow-auto font-mono text-[13px] leading-[1.75] whitespace-pre-wrap">' +
+                            parts
+                                .map(function (p) {
+                                    // Force boolean conversion
+                                    const isAdded = !!p.added;
+                                    const isRemoved = !!p.removed;
+
+                                    const cls =
+                                        !isAdded && !isRemoved
+                                            ? "text-[var(--ink)]"
+                                            : isAdded
+                                                ? "bg-[var(--accent-soft)] text-[var(--accent-strong)] font-medium rounded px-0.5 py-0.5"
+                                                : "bg-[#F8E3E0] text-[var(--danger)] line-through rounded px-0.5 py-0.5";
+
+                                    return (
+                                        '<span class="' +
+                                        cls +
+                                        '">' +
+                                        Roaster.esc(p.value || "") +
+                                        "</span>"
+                                    );
+                                })
+                                .join("") +
+                            "</div></div>";
+                        Roaster.drawIcons();
+                    } catch (e) {
+                        box.innerHTML =
+                            '<div class="text-xs text-[var(--danger)] bg-[#F8E3E0] rounded-xl px-3 py-2">' +
+                            Roaster.esc(e.message) +
+                            "</div>";
+                        Roaster.drawIcons();
+                    }
+                }
+                shell();
+                load();
             }
 
             renderResumeDetail();
