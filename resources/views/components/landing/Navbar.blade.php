@@ -15,7 +15,7 @@
                         <a href="#how-it-works" class="hover:text-[var(--foreground)]">How it works</a>
                         <a href="#benefits" class="hover:text-[var(--foreground)]">Benefits</a>
                 </div>
-                <div class="flex items-center gap-2 text-md text-[var(--muted-foreground)]">
+                <div class="flex items-center gap-4 text-md text-[var(--muted-foreground)]">
                         <button type="button" id="theme-toggle"
                                 class="h-9 w-9 rounded-full bg-card border border-border flex items-center justify-center shadow-sm"
                                 aria-label="Toggle theme"><i data-lucide="moon" class="w-4 h-4"></i>
@@ -26,7 +26,11 @@
                                         Get Started
                                 </a>
                 </div>
-                <div class="md:hidden flex items-center gap-2">
+                <div class="md:hidden flex items-center gap-4">
+                        <button type="button" id="theme-toggle"
+                                class="h-9 w-9 rounded-full bg-card border border-border flex items-center justify-center shadow-sm"
+                                aria-label="Toggle theme"><i data-lucide="moon" class="w-4 h-4"></i>
+                        </button>
                         <a href="/login" class="text-xs font-semibold text-[var(--muted-foreground)]">Sign in</a>
                         <a href="/register" class="h-9 px-3 rounded-full text-xs font-semibold text-white flex items-center">Start</a>
                 </div>
