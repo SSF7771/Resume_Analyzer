@@ -16,16 +16,19 @@
                         <a href="#benefits" class="hover:text-[var(--foreground)]">Benefits</a>
                 </div>
                 <div class="flex items-center gap-0.5 text-md text-[var(--muted-foreground)]">
-                        <a href="/login" class="hover:text-[var(--foreground)]">Sign in</a>
-                        <a href="/register"
-                                class="inline-flex items-center h-10 px-4 rounded-full text-primary-foreground font-semibold hover:text-[var(--foreground)]">
-                                Get Started
-                        </a>
+                        <button type="button" id="theme-toggle"
+                                class="h-11 w-11 rounded-full bg-card border border-border flex items-center justify-center shadow-sm"
+                                aria-label="Toggle theme">
+                                <i data-lucide="moon" class="w-4 h-4"></i>
+                                <a href="/login" class="hover:text-[var(--foreground)]">Sign in</a>
+                                <a href="/register"
+                                        class="inline-flex items-center h-10 px-4 rounded-full text-primary-foreground font-semibold hover:text-[var(--foreground)]">
+                                        Get Started
+                                </a>
                 </div>
                 <div class="md:hidden flex items-center gap-2">
                         <a href="/login" class="text-xs font-semibold text-[var(--muted-foreground)]">Sign in</a>
-                        <a href="/register"
-                                class="h-9 px-3 rounded-full text-xs font-semibold text-white flex items-center">Start</a>
+                        <a href="/register" class="h-9 px-3 rounded-full text-xs font-semibold text-white flex items-center">Start</a>
                 </div>
         </div>
 </nav>
