@@ -15,7 +15,7 @@
                     <!-- Upload Section -->
                     <div class="lg:col-span-4">
                         <div class="sticky top-6">
-                            <x-ui.card>
+                            <x-ui.Card>
                                 <div class="font-display text-lg font-semibold">Upload resume</div>
                                 <form id="upload-form" class="space-y-4 mt-6">
                                     @csrf
@@ -38,7 +38,7 @@
                                         Upload resume
                                     </button>
                                 </form>
-                            </x-ui.card>
+                            </x-ui.Card>
                         </div>
                     </div>
 
