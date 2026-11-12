@@ -17,9 +17,9 @@
                 </div>
                 <div class="flex items-center gap-0.5 text-md text-[var(--muted-foreground)]">
                         <button type="button" id="theme-toggle"
-                                class="h-11 w-11 rounded-full bg-card border border-border shadow-sm"
-                                aria-label="Toggle theme">
-                                <i data-lucide="moon" class="w-4 h-4"></i>
+                                class="h-11 w-11 rounded-full bg-card border border-border flex items-center justify-center shadow-sm"
+                                aria-label="Toggle theme"><i data-lucide="moon" class="w-4 h-4"></i>
+                        </button>
                                 <a href="/login" class="hover:text-[var(--foreground)]">Sign in</a>
                                 <a href="/register"
                                         class="inline-flex items-center h-10 px-4 rounded-full text-primary-foreground font-semibold hover:text-[var(--foreground)]">
