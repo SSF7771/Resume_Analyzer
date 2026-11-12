@@ -728,3 +728,11 @@ async function main() {
 document.addEventListener("DOMContentLoaded", function () {
     main();
 });
+
+// To make some functions be available globally, use window.[function_name] = [function_name]
+window.initChart = initChart;
+window.landing = landing;
+window.initDiffPanel = initDiffPanel;
+window.initTheme = initTheme;
+window.getComputedColor = getComputedColor;
+window.getComputedColor = getComputedColor;
