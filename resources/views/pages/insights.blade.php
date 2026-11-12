@@ -54,7 +54,7 @@
                                 "sparkles",
                                 "No analyses yet",
                                 "Once you analyze a few resumes, this page lights up with trends across your data.",
-                                '<a href="/resumes" class="inline-flex h-10 px-4 rounded-2xl text-[var(--foreground)] font-semibold items-center bg-[var(--primary)]">Go to resumes</a>',
+                                '<a href="/resumes" class="roaster-primary-button inline-flex items-center gap-2 h-10 px-4 rounded-2xl text-sm font-semibold text-white">Go to resumes</a>',
                             );
                         drawIcons();
                         return;
