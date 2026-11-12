@@ -319,7 +319,7 @@ function initShell() {
     initCommandPalette();
 
     var path = location.pathname;
-    Roaster.$("[data-nav]").forEach(function (a) {
+    Roaster.$$("[data-nav]").forEach(function (a) {
         var target = a.getAttribute("data-nav");
         var row = a.querySelector(".nav-row");
         if (!row) return;
