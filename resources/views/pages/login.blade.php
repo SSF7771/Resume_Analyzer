@@ -84,13 +84,13 @@
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // 1. Reset error state
+                // Reset error state
                 if (errorDiv) {
                     errorDiv.textContent = '';
                     errorDiv.classList.add('hidden');
                 }
 
-                // 2. Set loading state on button (with Lucide spinner icon)
+                // Set loading state on button (with Lucide spinner icon)
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = `
@@ -107,7 +107,7 @@
                 const data = Object.fromEntries(formData.entries());
 
                 try {
-                    const response = await Roaster.api("/login", {
+                    const response = await Roaster.api("/auth/login", {
                         method: "POST",
                         body: data,
                     });

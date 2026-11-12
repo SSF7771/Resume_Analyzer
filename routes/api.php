@@ -22,8 +22,8 @@ Route::get('/health', HealthController::class);
 // });
 
 // Auth Routes (Public)
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/auth/register', [UserController::class, 'register']);
+Route::post('/auth/login', [UserController::class, 'login']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
