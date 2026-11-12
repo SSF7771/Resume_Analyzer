@@ -102,7 +102,7 @@
                     Roaster.drawIcons();
                 }
 
-                // 3. Collect form data
+                // Collect form data
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
