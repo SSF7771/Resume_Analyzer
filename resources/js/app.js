@@ -332,7 +332,7 @@ function initShell() {
             );
         }
     });
-    $Roaster.$('[data-action="logout"]').forEach(function (b) {
+    Roaster.$('[data-action="logout"]').forEach(function (b) {
         b.onclick = async function () {
             try {
                 if (Roaster.token())
@@ -736,3 +736,4 @@ window.initDiffPanel = initDiffPanel;
 window.initTheme = initTheme;
 window.getComputedColor = getComputedColor;
 window.getComputedColor = getComputedColor;
+window.getPageId = getPageId;
