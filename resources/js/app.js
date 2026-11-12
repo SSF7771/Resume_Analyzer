@@ -319,7 +319,7 @@ function initShell() {
     initCommandPalette();
 
     var path = location.pathname;
-    $Roaster.$("[data-nav]").forEach(function (a) {
+    Roaster.$("[data-nav]").forEach(function (a) {
         var target = a.getAttribute("data-nav");
         var row = a.querySelector(".nav-row");
         if (!row) return;
@@ -537,7 +537,7 @@ async function initDiffPanel() {
                 '</select><button id="full-diff-compare" type="button" class="h-8 px-3 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(135deg,var(--accent),var(--accent-strong))">Compare</button></div><div id="full-diff-result" class="mt-5"></div>',
         );
         Roaster.drawIcons();
-        $Roaster.$("[data-full-diff-mode]").forEach(function (b) {
+        Roaster.$("[data-full-diff-mode]").forEach(function (b) {
             b.onclick = function () {
                 mode = b.dataset.fullDiffMode;
                 shell();
