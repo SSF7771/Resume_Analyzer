@@ -11,6 +11,7 @@ use App\Services\ResumeParserService;
 use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Log;
 
 class ResumeController extends Controller
@@ -22,10 +23,11 @@ class ResumeController extends Controller
 
         // Store original file locally
         $originalPublicId = $request->file('file')->store('uploads', 'public');
-        $localPath = storage_path('app/public/' . $originalPublicId);
+        // $localPath = storage_path('app/public/' . $originalPublicId);
+        $localPath = Storage::disk('public')->path($originalPublicId);
 
         $uploadResult = (new UploadApi())->upload($localPath, [
-            'resource_type' => 'raw',
+            'resource_type' => 'auto',
             'folder' => 'resumes',
         ]);
 
