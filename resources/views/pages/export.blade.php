@@ -61,32 +61,41 @@
                         const b = s.basics || {};
 
                         let h = `<div>
-                                <h1 class="text-3xl font-bold tracking-tight">${esc(b.name || resume.title || "Resume")}</h1>
-                                ${b.title ? `<div class="text-base mt-1 text-[var(--accent-strong)]">${esc(b.title)}</div>` : ""}
-                                <div class="text-xs text-gray-500 mt-2">
-                                    ${[b.email, b.phone, b.location].filter(Boolean).map(esc).join(" · ")}
-                                </div>`;
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold tracking-tight">${esc(b.name || resume.title || "Resume")}</h1>
+                            ${b.title ? `<div class="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl mt-1 text-[var(--accent-strong)] font-medium">${esc(b.title)}</div>` : ""}
+
+                            <!-- Contact Info -->
+                            <div class="text-[11px] sm:text-xs md:text-sm lg:text-sm xl:text-sm text-gray-500 mt-2">
+                                ${[b.email, b.phone, b.location].filter(Boolean).map(esc).join(" · ")}
+                            </div>`;
 
                         // Summary
                         if (s.summary) {
-                            h += `<section class="mt-6"><h2 class="text-sm font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Summary</h2><p class="text-sm mt-2 leading-relaxed">${esc(s.summary)}</p></section>`;
+                            h += `
+                        <section class="mt-6">
+                            <h2 class="text-xs sm:text-sm md:text-base lg:text-base xl:text-lg font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Summary</h2>
+                            <p class="text-xs sm:text-sm md:text-base lg:text-base xl:text-base mt-2 leading-relaxed">${esc(s.summary)}</p>
+                        </section>`;
                         }
 
                         // Experience
                         if (Array.isArray(s.experience) && s.experience.length > 0) {
-                            h += `<section class="mt-5"><h2 class="text-sm font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Experience</h2><div class="mt-3 space-y-4">`;
+                            h += `
+                        <section class="mt-5">
+                            <h2 class="text-xs sm:text-sm md:text-base lg:text-base xl:text-lg font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Experience</h2>
+                            <div class="mt-3 space-y-4">`;
                             h += s.experience
                                 .map(
                                     (e) => `
-                                <div>
-                                    <div class="font-semibold text-sm">${esc(e.role || "")}</div>
-                                    <div class="text-xs text-gray-500">${esc(e.company || "")}${e.period ? " · " + esc(e.period) : ""}</div>
-                                    ${Array.isArray(e.bullet_points) && e.bullet_points.length > 0
-                                            ? `<ul class="list-disc ml-5 mt-1 text-sm space-y-1">${e.bullet_points.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`
+                            <div>
+                                <div class="font-semibold text-xs sm:text-sm md:text-base lg:text-base xl:text-base">${esc(e.role || "")}</div>
+                                <div class="text-[11px] sm:text-xs md:text-sm lg:text-sm xl:text-sm text-gray-500">${esc(e.company || "")}${e.period ? " · " + esc(e.period) : ""}</div>
+                                ${Array.isArray(e.bullet_points) && e.bullet_points.length > 0
+                                            ? `<ul class="list-disc ml-5 mt-1 text-xs sm:text-sm md:text-base lg:text-base xl:text-base space-y-1">${e.bullet_points.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`
                                             : ""
                                         }
-                                </div>
-                            `,
+                            </div>
+                        `,
                                 )
                                 .join("");
                             h += `</div></section>`;
@@ -94,12 +103,17 @@
 
                         // Education
                         if (Array.isArray(s.education) && s.education.length > 0) {
-                            h += `<section class="mt-5"><h2 class="text-sm font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Education</h2><div class="mt-3 space-y-2">`;
+                            h += `
+                        <section class="mt-5">
+                            <h2 class="text-xs sm:text-sm md:text-base lg:text-base xl:text-lg font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Education</h2>
+                            <div class="mt-3 space-y-2">`;
                             h += s.education
                                 .map(
                                     (e) => `
-                                <div class="text-sm"><span class="font-semibold">${esc(e.degree || "")}</span>${e.school ? " · " + esc(e.school) : ""}</div>
-                            `,
+                            <div class="text-xs sm:text-sm md:text-base lg:text-base xl:text-base">
+                                <span class="font-semibold">${esc(e.degree || "")}</span>${e.school ? " · " + esc(e.school) : ""}
+                            </div>
+                        `,
                                 )
                                 .join("");
                             h += `</div></section>`;
@@ -107,20 +121,26 @@
 
                         // Skills
                         if (Array.isArray(s.skills) && s.skills.length > 0) {
-                            h += `<section class="mt-5"><h2 class="text-sm font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Skills</h2>
-                          <div class="text-sm mt-2">${esc(s.skills.join(" · "))}</div></section>`;
+                            h += `
+                        <section class="mt-5">
+                            <h2 class="text-xs sm:text-sm md:text-base lg:text-base xl:text-lg font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Skills</h2>
+                            <div class="text-xs sm:text-sm md:text-base lg:text-base xl:text-base mt-2 leading-relaxed">${esc(s.skills.join(" · "))}</div>
+                        </section>`;
                         }
 
                         // Certifications
                         if (Array.isArray(s.certifications) && s.certifications.length > 0) {
-                            h +=
-                                `<section class="mt-5"><h2 class="text-sm font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Certifications</h2>
-                          <div class="mt-3 space-y-2">` +
+                            h += `
+                        <section class="mt-5">
+                            <h2 class="text-xs sm:text-sm md:text-base lg:text-base xl:text-lg font-bold uppercase tracking-wider border-b border-gray-300 pb-1">Certifications</h2>
+                            <div class="mt-3 space-y-2">` +
                                 s.certifications
                                     .map(
                                         (c) => `
-                              <div class="text-sm"><span class="font-semibold">${esc(c.name)}</span> ${c.issuer ? " · " + esc(c.issuer) : ""}</div>
-                          `,
+                                <div class="text-xs sm:text-sm md:text-base lg:text-base xl:text-base">
+                                    <span class="font-semibold">${esc(c.name)}</span> ${c.issuer ? " · " + esc(c.issuer) : ""}
+                                </div>
+                            `,
                                     )
                                     .join("") +
                                 `</div></section>`;
@@ -208,11 +228,11 @@
                                             scale: 2,
                                             useCORS: true,
                                             logging: false,
-                                            windowWidth: el.scrollWidth,
+                                            windowWidth: 794
                                         },
                                         jsPDF: {
-                                            format: "a4",
-                                            unit: "in",
+                                            format: [794, 1123],    //A4 standard dimensions
+                                            unit: "px",
                                             orientation: "portrait",
                                         },
                                     })
