@@ -342,8 +342,8 @@ body {
         display: none !important;
     }
     @page {
-        margin: 0;
-        size: auto;
+        size: A4 portrait;
+        margin: 5mm 5mm auto auto; /* Native print margins */
     }
     body {
         margin: 0;

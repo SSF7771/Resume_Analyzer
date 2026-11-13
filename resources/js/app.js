@@ -151,7 +151,7 @@ window.Roaster = Object.assign(window.Roaster || {}, {
             ? path
             : `${base}${path.startsWith("/") ? path : "/" + path}`;
 
-        console.log("URL being used: ", url);
+        // console.log("URL being used: ", url);
 
         const res = await fetch(url, {
             method: options.method || "GET",
@@ -160,8 +160,10 @@ window.Roaster = Object.assign(window.Roaster || {}, {
         });
 
         const rawText = await res.text();
-        console.log("HTTP Status:", res.status);
-        console.log("Raw Response from server:", rawText);
+
+        // Debug
+        // console.log("HTTP Status:", res.status);
+        // console.log("Raw Response from server:", rawText);
 
         let data = null;
         try {
