@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>@yield('title', 'Roaster')</title>
+  <title>@yield('title', 'Roaster')</title> 
 
   <!-- Tailwindcss + Public css file -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -40,6 +40,8 @@
     lucide.createIcons();
   </script>
 
+  <!-- For local environment and testing -->
+  <!-- <script src="{{ asset('js/app.js') }}"></script> -->
   @stack('scripts')
 </body>
 
