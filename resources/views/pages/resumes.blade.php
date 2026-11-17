@@ -5,7 +5,7 @@
 @section('body')
     <div class="min-h-screen flex bg-[var(--background)]">
         <div class="no-print">@include('components.layout.Sidebar')</div>
-        <main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
+        <main class="flex-1 min-w-0 px-4 sm:px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
             <div class="no-print">@include('components.layout.Topbar')</div>
 
             <div id="resumes-page" class="page-enter">
@@ -20,11 +20,11 @@
                                 <form id="upload-form" class="space-y-4 mt-6">
                                     @csrf
                                     <label
-                                        class="group flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[var(--border)] bg-[var(--surface-2)] hover:border-[var(--primary)] transition-colors p-8 text-center cursor-pointer">
+                                        data-dropzone class="dropzone group flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[var(--border)] bg-[var(--surface-2)] hover:border-[var(--primary)] p-8 text-center cursor-pointer">
                                         <input id="resume-file" type="file" name="file" accept="application/pdf"
                                             class="hidden">
                                         <div
-                                            class="h-14 w-14 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent-strong)] flex items-center justify-center">
+                                            class="icon-tile h-14 w-14 rounded-2xl">
                                             <i data-lucide="upload-cloud" class="w-7 h-7"></i>
                                         </div>
                                         <div class="font-semibold mt-4">Drop PDF here</div>
@@ -34,7 +34,7 @@
                                     <input id="resume-title" placeholder="Optional title"
                                         class="w-full h-12 px-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none focus:border-[var(--primary)]">
                                     <button id="upload-btn" type="submit"
-                                        class="w-full h-12 rounded-2xl font-semibold bg-[var(--primary)] text-[var(--background)]">
+                                        class="roaster-primary-button w-full h-12 rounded-2xl font-semibold">
                                         Upload resume
                                     </button>
                                 </form>
@@ -44,7 +44,7 @@
 
                     <!-- List Section -->
                     <div class="lg:col-span-8">
-                        <div id="resume-list" class="space-y-4">
+                        <div id="resume-list" class="space-y-4 stagger">
                             <div class="h-32 animate-pulse bg-[var(--surface-2)] rounded-3xl"></div>
                         </div>
                     </div>
@@ -120,7 +120,8 @@
 
                     const b = document.getElementById("upload-btn");
                     b.disabled = true;
-                    b.textContent = "Uploading...";
+                    b.innerHTML = Roaster.icon("loader-2", "w-4 h-4 animate-spin inline-block mr-2 -mt-0.5") + "Uploading & parsing...";
+                    Roaster.drawIcons();
 
                     try {
                         await Roaster.api("/resumes", { method: "POST", body: fd });
@@ -129,6 +130,7 @@
                         // Reset form & reload list
                         form.reset();
                         fileName.textContent = "";
+                        form.querySelector("[data-dropzone]")?.classList.remove("has-file");
                         renderResumes();
                     } catch (err) {
                         Roaster.toast("Upload failed", err.message, "error");
@@ -159,7 +161,7 @@
                             ${Roaster.badge((r.quota?.remaining ?? 5) + " / 5 rewrites left this month",
                                 (r.quota?.remaining ?? 5) <= 1 ? "danger" : "neutral")}
                         </a>
-                        <button data-delete-resume="${Roaster.esc(r.id)}" class="h-10 w-10 rounded-full hover:bg-red-50 text-[var(--ink-muted)] hover:text-[var(--danger)] flex items-center justify-center transition-colors">
+                        <button data-delete-resume="${Roaster.esc(r.id)}" class="h-10 w-10 rounded-full hover:bg-[var(--danger)]/10 text-[var(--ink-muted)] hover:text-[var(--danger)] flex items-center justify-center transition-colors">
                             ${Roaster.icon("trash-2", "w-4 h-4")}
                         </button>
                     </div>

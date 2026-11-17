@@ -4,24 +4,10 @@
 
 @section('body')
 <div class="min-h-screen flex lg:grid lg:grid-cols-2">
-    <!-- Left Side -->
-    <div class="hidden lg:flex flex-col justify-end p-12 xl:p-20 bg-[var(--foreground)] text-[var(--background)]">
-        <div class="max-w-xl">
-            <div class="inline-block px-3 py-1 rounded-full bg-[var(--background)]/10 text-[11px] uppercase tracking-[0.2em] font-bold mb-6">
-                Roaster AI
-            </div>
-            <h2 class="font-display text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
-                Your resume,<br>
-                <em class="font-serif font-light text-[var(--accent)]">intelligently sharpened.</em>
-            </h2>
-            <p class="text-[var(--background)]/70 mt-8 text-lg leading-relaxed max-w-lg">
-                Drop your PDF, get an ATS score, fix weak bullets, and land interviews - powered by high-precision AI.
-            </p>
-        </div>
-    </div>
+    @include('components.auth.AuthVisual', ['headline' => 'Your resume,', 'accent' => 'intelligently sharpened.', 'subhead' => 'Drop your PDF, get an ATS score, fix weak bullets, and land interviews — powered by AI.'])
 
-    <!-- Right Side -->
-    <div class="flex flex-col justify-center items-center p-8 w-full">
+        <!-- Right Side -->
+    <div class="relative flex flex-col justify-center items-center p-6 sm:p-8 w-full page-enter">
         <div class="w-full max-w-sm">
             <div class="mb-8 scale-90 origin-left">@include('components.layout.AILogo')</div>
             
@@ -33,24 +19,24 @@
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Full name</label>
                     <input name="name" required autocomplete="name" placeholder="Ada Lovelace"
-                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] focus:border-[var(--primary)] transition-colors outline-none">
+                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] outline-none shadow-card">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Email</label>
                     <input name="email" type="email" required autocomplete="email" placeholder="you@example.com"
-                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] focus:border-[var(--primary)] transition-colors outline-none">
+                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] outline-none shadow-card">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Password</label>
-                    <input name="password" type="password" required minlength="8" autocomplete="new-password"
+                    <input name="password" type="password" data-strength required minlength="8" autocomplete="new-password"
                         placeholder="Min. 8 characters"
-                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] focus:border-[var(--primary)] transition-colors outline-none">
+                        class="w-full h-12 px-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] outline-none shadow-card">
                 </div>
                 
-                <div id="register-error" class="hidden text-xs text-[var(--destructive)] bg-red-50 rounded-xl px-4 py-3 border border-red-100"></div>
+                <div id="register-error" class="hidden text-xs font-medium text-[var(--danger)] bg-[var(--danger)]/10 rounded-xl px-4 py-3 border border-[var(--danger)]/25"></div>
                 
                 <button id="register-submit" type="submit"
-                    class="w-full h-12 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                    class="roaster-primary-button w-full h-12 rounded-2xl font-semibold flex items-center justify-center gap-2">
                     Create account 
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
@@ -141,6 +127,7 @@
                     if (errorDiv) {
                         errorDiv.textContent = errorMsg;
                         errorDiv.classList.remove('hidden');
+                        form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
                     }
                 }
             });
