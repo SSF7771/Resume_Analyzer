@@ -140,8 +140,11 @@
             }
 
             // Render Individual Row Helper
-            function renderResumeItem(r) {
+            function renderResumeItem(r, quota) {
                 const versionCount = r.latest_version_number || 1;
+                const remaining = quota?.remaining ?? window.__user?.quota?.remaining ?? 5;
+                const total = quota?.total ?? 5;
+
                 return Roaster.card(`
                     <div class="flex items-center gap-4">
                         <a href="/resumes/${encodeURIComponent(r.id)}" class="flex items-center gap-4 flex-1 group">
@@ -153,6 +156,8 @@
                                 <div class="text-xs text-[var(--ink-muted)] mt-1">Updated ${Roaster.relativeTime(r.updated_at)}</div>
                             </div>
                             ${Roaster.badge(versionCount + " version" + (versionCount > 1 ? "s" : ""), "neutral")}
+                            ${Roaster.badge((r.quota?.remaining ?? 5) + " / 5 rewrites left this month",
+                                (r.quota?.remaining ?? 5) <= 1 ? "danger" : "neutral")}
                         </a>
                         <button data-delete-resume="${Roaster.esc(r.id)}" class="h-10 w-10 rounded-full hover:bg-red-50 text-[var(--ink-muted)] hover:text-[var(--danger)] flex items-center justify-center transition-colors">
                             ${Roaster.icon("trash-2", "w-4 h-4")}

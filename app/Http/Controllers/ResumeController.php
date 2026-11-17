@@ -78,13 +78,33 @@ class ResumeController extends Controller
     public function index()
     {
         // Get resumes for logged-in user, sorted by update date
-        $resumes = Resume::where('user_id', auth()->id())
+        $userId = auth()->id();
+        $limit = 5;
+
+        // Load resumes and count monthly versions in 1 query using withCount:
+        $resumes = Resume::where('user_id', $userId)
+            ->withCount([
+                'versions as used_this_month' => function ($query) {
+                    $query->where('created_at', '>=', now()->startOfMonth());
+                }
+            ])
             ->orderBy('updated_at', 'desc')
             ->get();
 
+        // Attach quota object to each resume:
+        $resumes->each(function ($resume) use ($limit) {
+            $used = $resume->used_this_month ?? 0;
+
+            $resume->quota = [
+                'used' => $used,
+                'remaining' => max(0, $limit - $used),
+                'limit' => $limit,
+            ];
+        });
+
         return response()->json([
             'success' => true,
-            'resumes' => $resumes
+            'resumes' => $resumes,
         ]);
     }
 
@@ -145,7 +165,7 @@ class ResumeController extends Controller
         $resumes = Resume::where('user_id', auth()->id())
             ->where('title', 'like', "%{$q}%")
             ->get();
-        
+
         return response()->json($resumes);
     }
 }

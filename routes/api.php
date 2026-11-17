@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\InsightController;
+use App\Http\Middleware\CheckMonthlyVersionLimit;
 use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Support\Facades\Route;
 
@@ -51,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Analyses & Rewrites
     Route::post('/resumes/{resume}/analyze', [AnalysisController::class, 'store']);
-    Route::post('/resumes/{resume}/rewrite', [RewriteController::class, 'store']);
+    Route::post('/resumes/{resume}/rewrite', [RewriteController::class, 'store'])->middleware(CheckMonthlyVersionLimit::class);
     Route::get('/resumes/{resume}/diff', [DiffController::class, 'show']);
 
     // Analysis for a specific version of the Resume
