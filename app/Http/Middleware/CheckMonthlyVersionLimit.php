@@ -15,8 +15,6 @@ class CheckMonthlyVersionLimit
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public const MONTHLY_LIMIT = 5;
-
     public const MONTHLY_LIMIT_PER_RESUME = 5;
 
     public function handle(Request $request, Closure $next): Response
