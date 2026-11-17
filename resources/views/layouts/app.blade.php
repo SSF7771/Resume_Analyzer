@@ -7,6 +7,29 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Roaster')</title>
 
+  <!-- Apply saved / OS theme before paint to avoid a flash of the wrong theme -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('arr-theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+
+      // Page transitions: a skipped transition (e.g. fast redirect, background tab) is harmless — silence its rejected promises
+      var quiet = function (e) {
+        var vt = e.viewTransition;
+        if (!vt) return;
+        [vt.ready, vt.finished, vt.updateCallbackDone].forEach(function (p) {
+          if (p && p.catch) p.catch(function () {});
+        });
+      };
+      window.addEventListener('pagereveal', quiet);
+      window.addEventListener('pageswap', quiet);
+    })();
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +66,7 @@
   </script>
 
   <!-- For local environment and testing -->
-  <script src="{{ asset('js/app.js') }}"></script>
+  <!-- <script src="{{ asset('js/app.js') }}"></script> -->
   @stack('scripts')
 </body>
 
