@@ -5,7 +5,7 @@
 @section('body')
     <div class="min-h-screen flex bg-[var(--background)]">
         <div class="no-print">@include('components.layout.Sidebar')</div>
-        <main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
+        <main class="flex-1 min-w-0 px-4 sm:px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
             <div class="no-print">@include('components.layout.Topbar')</div>
 
             <div id="history-page" class="page-enter">
@@ -46,15 +46,16 @@
                     var d = await api("/history");
                     var events = d.events || [],
                         tot = d.totals || { all: events.length },
-                        filter = "all";
+                        filter = "all",
+                        query = "";
 
                     function render() {
-                        var f =
-                            filter === "all"
-                                ? events
-                                : events.filter(function (e) {
-                                    return e.type === filter;
-                                });
+                        var q = query.toLowerCase();
+                        var f = events.filter(function (e) {
+                            if (filter !== "all" && e.type !== filter) return false;
+                            if (!q) return true;
+                            return ((e.title || "") + " " + (e.subtitle || "")).toLowerCase().indexOf(q) !== -1;
+                        });
 
                         var groups = {};
                         f.forEach(function (e) {
@@ -84,15 +85,15 @@
                                 "History",
                                 "Everything you've done across your resumes, in time order.",
                             ) +
-                            '<div class="inline-flex items-center gap-1 bg-[var(--surface)] border border-[var(--border)] p-1 rounded-full">' +
+                            '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div class="inline-flex flex-wrap items-center gap-1 bg-[var(--card)] border border-[var(--border)] p-1.5 rounded-full shadow-card">' +
                             filters
                                 .map(function (x) {
                                     const isActive = filter === x[0];
                                     const baseClass =
-                                        "h-8 px-3.5 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition-all ";
+                                        "h-9 px-4 rounded-full text-xs font-bold inline-flex items-center gap-1.5 transition-all duration-300 ";
                                     const activeClass = isActive
-                                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm"
-                                        : "text-[var(--muted-foreground)] hover:bg-[var(--secondary)]";
+                                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-card"
+                                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)]";
 
                                     return (
                                         '<button data-hfilter="' +
@@ -109,14 +110,14 @@
                                     );
                                 })
                                 .join("") +
-                            '</div><div class="space-y-7 mt-6">' +
+                            '</div><div class="relative sm:w-64"><span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]">' + icon("search", "w-4 h-4") + '</span><input id="history-search" value="' + esc(query) + '" placeholder="Search activity…" class="w-full h-11 pl-10 pr-4 rounded-full border border-[var(--border)] bg-[var(--card)] text-sm outline-none"></div></div><div class="space-y-8 mt-7">' +
                             (Object.keys(groups).length === 0
                                 ? empty("history", "No history found", "Your activity timeline will appear here once you start interacting with your resumes.")
                                 : Object.keys(groups)
                                     .map(function (day) {
                                         var items = groups[day];
                                         return (
-                                            '<div><div class="flex items-center gap-3 mb-3"><h3 class="text-xs uppercase tracking-wide font-semibold text-[var(--ink-muted)]">' +
+                                            '<div data-reveal><div class="flex items-center gap-3 mb-3"><span class="h-2 w-2 rounded-full bg-[var(--primary)]"></span><h3 class="text-xs uppercase tracking-wider font-bold text-[var(--ink-muted)]">' +
                                             esc(day) +
                                             '</h3><div class="flex-1 h-px bg-[var(--border)]"></div><span class="text-[10px] text-[var(--ink-muted)]">' +
                                             items.length +
@@ -132,11 +133,17 @@
                                                                     e.resumeId,
                                                                 )
                                                                 : "#") +
-                                                            '" class="flex items-start gap-3 px-5 py-3.5 ' +
+                                                            '" class="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--surface-2)] ' +
                                                             (i
                                                                 ? "border-t border-[var(--border)]"
                                                                 : "") +
-                                                            '"><div class="h-9 w-9 rounded-xl bg-[var(--surface-2)] flex items-center justify-center text-[var(--ink-muted)]">' +
+                                                            '"><div class="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ' +
+                                                            (e.type === "upload"
+                                                                ? "bg-[var(--accent-soft)] text-[var(--accent-strong)]"
+                                                                : e.type === "rewrite"
+                                                                    ? "bg-[var(--success)]/12 text-[var(--success)]"
+                                                                    : "bg-[var(--primary)] text-[var(--primary-foreground)]") +
+                                                            '">' +
                                                             icon(
                                                                 e.type === "upload"
                                                                     ? "upload"
@@ -144,7 +151,7 @@
                                                                         ? "pen-line"
                                                                         : "sparkles",
                                                             ) +
-                                                            '</div><div class="flex-1"><div class="text-sm font-medium">' +
+                                                            '</div><div class="flex-1 min-w-0"><div class="text-sm font-semibold truncate">' +
                                                             esc(e.title || "") +
                                                             '</div><div class="text-xs text-[var(--ink-muted)] mt-0.5">' +
                                                             esc(e.subtitle || "") +
@@ -159,7 +166,7 @@
                                                             ) +
                                                             '<div class="text-[10px] text-[var(--ink-muted)] mt-1">' +
                                                             relativeTime(e.at) +
-                                                            "</div></div></a>"
+                                                            "</div></div><span class=\"hidden sm:flex text-[var(--muted-foreground)] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all\">" + icon("chevron-right", "w-4 h-4") + "</span></a>"
                                                         );
                                                     })
                                                     .join(""),
@@ -172,6 +179,17 @@
                             "</div>";
 
                         drawIcons();
+                        var search = $("#history-search");
+                        if (search) {
+                            search.oninput = function () {
+                                query = search.value;
+                                var pos = search.selectionStart;
+                                render();
+                                var again = $("#history-search");
+                                again.focus();
+                                again.setSelectionRange(pos, pos);
+                            };
+                        }
                         $$("[data-hfilter]").forEach(function (b) {
                             b.onclick = function () {
                                 filter = b.dataset.hfilter;

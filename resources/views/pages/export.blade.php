@@ -5,7 +5,7 @@
 @section('body')
     <div class="min-h-screen flex bg-[var(--background)]">
         <div class="no-print">@include('components.layout.Sidebar')</div>
-        <main class="flex-1 px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
+        <main class="flex-1 min-w-0 px-4 sm:px-6 md:px-8 py-6 max-w-[1600px] mx-auto w-full">
             <div class="no-print">@include('components.layout.Topbar')</div>
 
             <div id="export-page" class="page-enter">
@@ -62,7 +62,7 @@
 
                         let h = `<div>
                             <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold tracking-tight">${esc(b.name || resume.title || "Resume")}</h1>
-                            ${b.title ? `<div class="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl mt-1 text-[var(--accent-strong)] font-medium">${esc(b.title)}</div>` : ""}
+                            ${b.title ? `<div class="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl mt-1 text-[#3f5a7a] font-medium">${esc(b.title)}</div>` : ""}
 
                             <!-- Contact Info -->
                             <div class="text-[11px] sm:text-xs md:text-sm lg:text-sm xl:text-sm text-gray-500 mt-2">
@@ -160,10 +160,10 @@
                                 return (
                                     '<button data-export-version="' +
                                     esc(x.id) +
-                                    '" class="h-9 px-3 rounded-full border text-xs font-semibold transition-all ' +
+                                    '" class="h-9 px-4 rounded-xl text-xs font-bold transition-all duration-300 ' +
                                     (String(x.id) === String(active)
-                                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm"
-                                        : "text-[var(--muted-foreground)] hover:bg-[var(--secondary)]") +
+                                        ? "bg-[var(--card)] text-[var(--foreground)] shadow-card"
+                                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]") +
                                     '">' +
                                     esc(x.label || "Version") +
                                     "</button>"
@@ -177,14 +177,14 @@
                                 "Preview a clean ATS-friendly PDF and download when it looks right.",
                                 '<a href="/resumes/' +
                                 encodeURIComponent(id) +
-                                '" class="inline-flex items-center gap-2 h-10 px-4 rounded-2xl border border-[var(--border)] hover:bg-[var(--surface-2)] text-sm font-semibold transition-all shadow-sm">' +
+                                '" class="roaster-secondary-button inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-semibold">' +
                                 icon("arrow-left") +
                                 " Back to resume</a>",
                             ) +
                             card(
-                                '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"><div><div class="font-display text-base font-semibold">Version</div><div class="text-sm text-[var(--ink-muted)] mt-1">Choose which version to export</div></div><div class="flex items-center gap-2 flex-wrap">' +
-                                buttons +
-                                '<button id="download-pdf" class="h-10 px-4 rounded-2xl text-white text-sm font-semibold flex items-center gap-2 shadow-md hover:opacity-95 transition-all" style="background:linear-gradient(135deg,#3B6E8C,#1A3644)">' +
+                                '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"><div class="flex items-center gap-3"><span class="icon-tile h-11 w-11 rounded-2xl">' + icon("file-down", "w-5 h-5") + '</span><div><div class="font-display text-base font-bold">Choose a version</div><div class="text-sm text-[var(--ink-muted)] mt-0.5">The preview below updates instantly</div></div></div><div class="flex items-center gap-3 flex-wrap"><div class="inline-flex flex-wrap gap-1 p-1.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)]">' +
+                                buttons + '</div>' +
+                                '<button id="download-pdf" class="roaster-primary-button h-11 px-5 rounded-2xl text-sm font-semibold flex items-center gap-2">' +
                                 icon("download") +
                                 " Download PDF</button></div></div>" +
                                 (v && v.source_type === "rewrite"
@@ -194,9 +194,9 @@
                                     : "") +
                                 "</div>",
                             ) +
-                            '<div class="mt-6 rounded-[20px] border border-[var(--border)] bg-white shadow-card p-8 sm:p-10"><div id="resume-print" class="max-w-[780px] mx-auto text-[#111827]">' +
+                            '<div class="mt-6 rounded-[28px] bg-[var(--surface-2)] border border-[var(--border)] p-3 sm:p-8"><div class="flex items-center justify-between px-2 pb-3 text-[11px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]"><span class="flex items-center gap-1.5">' + icon("eye", "w-3.5 h-3.5") + ' Live preview · A4</span><span>ATS-friendly</span></div><div class="export-paper mx-auto max-w-[860px] rounded-xl bg-white shadow-hover p-6 sm:p-12 transition-transform duration-500"><div id="resume-print" class="max-w-[780px] mx-auto text-[#111827]">' +
                             resumeHtml(v) +
-                            "</div></div>";
+                            "</div></div></div>";
 
                         drawIcons();
 

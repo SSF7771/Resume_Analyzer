@@ -38,7 +38,9 @@ class RewriteController extends Controller
         // even if the AI re-parser missed them or reverted them.
         $finalParsed = $logic->patchSections($baseParsed, $rewrites);
 
-        $newVersionNumber = $resume->latest_version_number + 1;
+        // Checks the highest existing version
+        $latestVersion = $resume->versions()->orderBy('version_number', 'desc')->first();
+        $newVersionNumber = $latestVersion ? ((int) $latestVersion->version_number + 1) : 1;
 
         $newVersion = ResumeVersion::create([
             'resume_id' => $resume->id,

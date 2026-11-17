@@ -2,7 +2,7 @@
 @section('title', 'Roaster - Sharpen your resume')
 @section('page', 'landing')
 @section('body')
-  <div class="min-h-screen bg-background text-foreground overflow-x-hidden">
+  <div class="min-h-screen bg-background text-foreground overflow-x-clip">
     @include('components.landing.Navbar')
     <main>
       @include('components.landing.HeroSection')
