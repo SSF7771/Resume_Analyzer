@@ -1,4 +1,4 @@
-@extends('layouts.app')
+body@extends('layouts.app')
 @section('title', 'Resume - Roaster')
 @section('page', 'resume-detail')
 
@@ -696,7 +696,7 @@
                             try {
                                 const x = await api("/resumes/" + encodeURIComponent(id) + "/analyze", {
                                     method: "POST",
-                                    body: { versionId: active, targetRole: targetRole || undefined },
+                                    body: { version_id: active, target_role: targetRole || undefined },
                                 });
                                 analysis = x.analysis || (x.data && x.data.analysis) || x;
                                 await overlay.close(true);
