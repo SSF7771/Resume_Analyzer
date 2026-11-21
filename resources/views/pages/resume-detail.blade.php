@@ -1,4 +1,4 @@
-body@extends('layouts.app')
+@extends('layouts.app')
 @section('title', 'Resume - Roaster')
 @section('page', 'resume-detail')
 
